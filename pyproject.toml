@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chilly-milly-engine"
+version = "0.1.0"
+authors = [
+    {name = "Dominik Reinartz", email = "dominik.reinartz@hotmail.com"},
+]
+description = "Game engine for all Chilly Milly Games."
+readme = "README.md"
+requires-python = "==3.9.13"
+dependencies = [
+    "arcade>=2.6.17",
+    "pyglet>=2.0.dev23",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.2.0",
+    "flake8>=6.0.0",
+    "mypy>=0.991",
+]

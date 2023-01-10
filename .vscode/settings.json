@@ -1,0 +1,11 @@
+{
+    "flake8.path": [
+        "C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\flake8.exe"
+    ],
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\mypy.exe",
+    "python.linting.flake8CategorySeverity.E": "Warning",
+    "python.linting.flake8CategorySeverity.F": "Warning",
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\flake8.exe"
+}

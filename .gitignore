@@ -1,0 +1,12 @@
+# Byte-compiled
+__pycache__/
+
+# virtualenv
+.venv/
+
+# mypy
+.mypy_cache/
+
+# egg
+*.egg-info
+*.egg
