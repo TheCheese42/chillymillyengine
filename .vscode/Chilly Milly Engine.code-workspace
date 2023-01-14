@@ -4,10 +4,5 @@
 			"path": ".."
 		}
 	],
-	"settings": {
-		"flake8.interpreter": [
-			"C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\python.exe"
-		],
-		"flake8.logLevel": "warn"
-	}
+	"settings": {}
 }
