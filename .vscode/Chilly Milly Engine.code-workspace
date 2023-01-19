@@ -4,5 +4,8 @@
 			"path": ".."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"cornflakes.linter.executablePath": "C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\flake8.exe",
+		"python.linting.mypyPath": "${workspaceFolder}\\.venv\\Scripts\\mypy.exe",
+	}
 }

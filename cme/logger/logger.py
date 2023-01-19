@@ -1,14 +1,18 @@
+"""Contains the LOGGER constant and convenience logging functions"""
+
 import logging
 
 LOGGER = logging.getLogger("chilly-milly-logger")
 
 
 def debug(msg: str, *args, exc_info=None, **kwargs) -> None:
-    return LOGGER.debug(msg, *args, exc_info=exc_info, **kwargs)
+    if LOGGER.isEnabledFor(logging.DEBUG):  # Performance tweak
+        return LOGGER.debug(msg, *args, exc_info=exc_info, **kwargs)
 
 
 def info(msg: str, *args, exc_info=None, **kwargs) -> None:
-    return LOGGER.info(msg, *args, exc_info=exc_info, **kwargs)
+    if LOGGER.isEnabledFor(logging.INFO):  # Performance tweak
+        return LOGGER.info(msg, *args, exc_info=exc_info, **kwargs)
 
 
 def warning(msg: str, *args, exc_info=None, **kwargs) -> None:
