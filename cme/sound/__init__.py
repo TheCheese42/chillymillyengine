@@ -1,3 +1,5 @@
+"""Provides sound utilities."""
+
 from .sound import (load_sound, pause_all_sounds, play_sound,
                     resume_all_sounds, stop_all_sounds, stop_sound)
 

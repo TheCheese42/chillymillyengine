@@ -5,7 +5,26 @@
 		}
 	],
 	"settings": {
-		"cornflakes.linter.executablePath": "C:\\Users\\Dominik\\code\\projects\\Chilly Milly\\Chilly Milly Engine\\.venv\\Scripts\\flake8.exe",
-		"python.linting.mypyPath": "${workspaceFolder}\\.venv\\Scripts\\mypy.exe",
+		"cornflakes.linter.run": "onType",
+		"python.linting.mypyEnabled": true,
+		"python.linting.mypyPath": "mypy",
+		"cornflakes.linter.executablePath": ".venv/Scripts/flake8", // throws error if just 'flake8'
+		"isort.path": [
+			"isort"
+		],
+		"isort.logLevel": "off",
+		"isort.check": true,
+		"python.linting.mypyArgs": [
+			"--follow-imports=silent",
+			"--ignore-missing-imports",
+			"--show-column-numbers",
+			"--no-pretty",
+			"--disallow-any-generics",
+			"--disallow-untyped-calls",
+			"--disallow-untyped-defs",
+			"--disallow-incomplete-defs",
+			"--disallow-untyped-decorators",
+			"--warn-unused-ignores"
+		]
 	}
 }

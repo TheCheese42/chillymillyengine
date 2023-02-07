@@ -1,3 +1,5 @@
+"""The Chilly Milly Engine Python Game Library"""
+
 import sys
 
 import config
@@ -10,8 +12,5 @@ if sys.version_info[0] < 3 or (
 
 def init_cme(
     app_name: str,
-):
+) -> None:
     config.app_name = app_name
-
-
-# #flake8: noqa (E402)
