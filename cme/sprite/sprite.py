@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Literal, Optional
 from pathlib import Path
+from typing import Any, Literal, Optional
 
 import arcade
 from enums import Facing
@@ -73,18 +73,26 @@ class AnimatedSprite(arcade.Sprite):
 
         self._state: Optional[str] = None
 
-        self.facing: Facing = Facing.RIGHT
+        self._facing: Facing | int = Facing.RIGHT
 
     @property
     def state(self) -> Optional[str]:
         return self._state
 
     @state.setter
-    def state(self, new_state: str) -> None:
-        if new_state not in self.all_textures:
-            raise ValueError(f"No textures found for state `{new_state}`")
-        self._state = new_state
+    def state(self, value: str) -> None:
+        if value not in self.all_textures:
+            raise ValueError(f"No textures found for state `{value}`")
+        self._state = value
         self.cur_texture_index = 0
+
+    @property
+    def facing(self) -> Facing | int:
+        return self._facing
+
+    @facing.setter
+    def facing(self, value: Facing | int) -> None:
+        self._facing = value
 
     def update_animation(self, delta_time: float = 1 / 60) -> None:
         """
@@ -133,7 +141,7 @@ class AnimatedSprite(arcade.Sprite):
     def add_textures(
         self, textures: dict[str, list[tuple[arcade.Texture, ...]]]
     ) -> None:
-        """
+        """wwadwwwddawd
         Add multiple Textures to the sprite. `textures` parameter should be a
         dict with a str as key indicating the category and a list of Textures
         as value.
