@@ -171,6 +171,12 @@ class AnimatedWalkingSprite(AnimatedSprite):
     """
     Adds out of the box support for idling und walking textures.
     Idles by default.
+
+    Textures are provided and saved as a list of tuples per category. The
+    tuples contain a sprite for each required facing directory. If you just
+    require left and right facing it might be best for you to flip the textures
+    while loading. For that use the `load_texture_pair()` function from this
+    module.
     """
 
     def __init__(
