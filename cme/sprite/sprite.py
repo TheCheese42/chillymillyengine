@@ -6,6 +6,7 @@ from typing import Any, Literal, Optional
 import arcade
 from enums import Facing
 from texture import load_texture
+import logger
 
 
 class AnimatedSprite(arcade.Sprite):
@@ -107,14 +108,23 @@ class AnimatedSprite(arcade.Sprite):
 
         self.cur_texture_index += 1
         try:
-            self.texture = self.all_textures[self.state][
+            differently_faced_textures = self.all_textures[self.state][
                 self.cur_texture_index
-            ][self.facing]
+            ]
         except IndexError:
             self.cur_texture_index = 0
-            self.texture = self.all_textures[self.state][
+            differently_faced_textures = self.all_textures[self.state][
                 self.cur_texture_index
-            ][self.facing]
+            ]
+        try:
+            self.texture = differently_faced_textures[self.facing]
+        except IndexError:
+            self.texture = differently_faced_textures[0]
+            logger.error(
+                "Tried to update animation on Sprite with unavailable facing, "
+                "falling back to index 0.",
+                exc_info=True
+            )
 
     def add_texture(
         self,

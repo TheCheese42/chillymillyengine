@@ -1,5 +1,5 @@
 echo "Activating venv..."
-src "./.venv/bin/activate"
+source "./.venv/bin/activate"
 echo "Running isort formatter..."
 python -m isort "./cme"
 echo "Running flake8 linter..."
