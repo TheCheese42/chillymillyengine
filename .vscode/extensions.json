@@ -2,7 +2,6 @@
     "recommendations": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "ms-python.isort",
         "donjayamanne.git-extension-pack",
         "kevinglasson.cornflakes-linter"
     ]

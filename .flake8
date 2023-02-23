@@ -3,7 +3,9 @@ ignore =
     ## Ignored as Pylance already does the job ##
     # Unused import
     F401
-    # Unused Assignment
+    # Unused assignment
     F841
-    # Syntax Error
+    # Syntax error
     E999
+    # Undefined name
+    F821

@@ -8,7 +8,7 @@
 		"cornflakes.linter.run": "onType",
 		"python.linting.mypyEnabled": true,
 		"python.linting.mypyPath": "mypy",
-		"cornflakes.linter.executablePath": ".venv/Scripts/flake8", // throws error if just 'flake8'
+		"cornflakes.linter.executablePath": ".venv/Scripts/flake8.exe", // throws error if just 'flake8'
 		"isort.path": [
 			"isort"
 		],

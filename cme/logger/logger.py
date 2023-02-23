@@ -1,7 +1,7 @@
 """Contains the LOGGER constant and convenience logging functions"""
 
-from typing import Optional, Any
 import logging
+from typing import Any, Optional
 
 LOGGER = logging.getLogger("chilly-milly-logger")
 

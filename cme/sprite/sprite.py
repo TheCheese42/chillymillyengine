@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import time
 from pathlib import Path
 from typing import Any, Literal, Optional
 
 import arcade
+import logger
 from enums import Facing
 from texture import load_texture
-import logger
 
 
 class AnimatedSprite(arcade.Sprite):
@@ -76,6 +77,9 @@ class AnimatedSprite(arcade.Sprite):
 
         self._facing: Facing | int = Facing.RIGHT
 
+        self._animation_speed: float = 1
+        self._last_animation_update = time.time()
+
     @property
     def state(self) -> Optional[str]:
         return self._state
@@ -95,36 +99,50 @@ class AnimatedSprite(arcade.Sprite):
     def facing(self, value: Facing | int) -> None:
         self._facing = value
 
+    @property
+    def animation_speed(self) -> float:
+        """Time between animation updates in seconds."""
+        return self._animation_speed
+
+    @animation_speed.setter
+    def animation_speed(self, value: int) -> None:
+        self._animation_speed = value
+
     def update_animation(self, delta_time: float = 1 / 60) -> None:
         """
         Updates the current texture by taking the next texture of the current
         state.
-        This will always update, only call if the time is right.
+        This will update based on the delta_time parameter.
         """
+
         if not self.state:
             raise RuntimeError(
                 "Tried to update animation of Sprite without state"
             )
 
-        self.cur_texture_index += 1
-        try:
-            differently_faced_textures = self.all_textures[self.state][
-                self.cur_texture_index
-            ]
-        except IndexError:
-            self.cur_texture_index = 0
-            differently_faced_textures = self.all_textures[self.state][
-                self.cur_texture_index
-            ]
-        try:
-            self.texture = differently_faced_textures[self.facing]
-        except IndexError:
-            self.texture = differently_faced_textures[0]
-            logger.error(
-                "Tried to update animation on Sprite with unavailable facing, "
-                "falling back to index 0.",
-                exc_info=True
-            )
+        current_time = time.time()
+        if current_time - self._last_animation_update >= self.animation_speed:
+            self.cur_texture_index += 1
+            self._last_animation_update = current_time
+
+            try:
+                differently_faced_textures = self.all_textures[self.state][
+                    self.cur_texture_index
+                ]
+            except IndexError:
+                self.cur_texture_index = 0
+                differently_faced_textures = self.all_textures[self.state][
+                    self.cur_texture_index
+                ]
+            try:
+                self.texture = differently_faced_textures[self.facing]
+            except IndexError:
+                self.texture = differently_faced_textures[0]
+                logger.error(
+                    "Tried to update animation on Sprite with unavailable "
+                    "facing, falling back to index 0.",
+                    exc_info=True
+                )
 
     def add_texture(
         self,
@@ -238,6 +256,16 @@ class AnimatedWalkingSprite(AnimatedSprite):
         self,
         textures: list[tuple[arcade.Texture, ...]],
     ) -> None:
+        """
+        Adds a list containing tuples of Textures and assigns them as idling
+        textures.
+
+        Obtain the Structure by collecting left-right faced texture tuples from
+        `load_texture_pair()` in a list.
+        If you only need one Texture for all possible facings or aren't using
+        different facing directions at all, simply pass one-item tuples to the
+        function.
+        """
         for texture in textures:
             self.add_texture(texture, "idling")
 
@@ -245,6 +273,16 @@ class AnimatedWalkingSprite(AnimatedSprite):
         self,
         textures: list[tuple[arcade.Texture, ...]],
     ) -> None:
+        """
+        Adds a list containing tuples of Textures and assigns them as walking
+        textures.
+
+        Obtain the Structure by collecting left-right texture tuples from
+        `load_texture_pair()` in a list.
+        If you only need one Texture for all possible facings or aren't using
+        different facing directions at all, simply pass one-item tuples to the
+        function.
+        """
         for texture in textures:
             self.add_texture(texture, "walking")
 
@@ -254,7 +292,7 @@ def load_texture_pair(
     **kwargs: Any,
 ) -> tuple[arcade.Texture, arcade.Texture]:
     """
-    All`**kwargs` are passed to the `load_texture()` function and
+    All `**kwargs` are passed to the `load_texture()` function and
     therefore applied to both textures. Don't use any `flipped_*` kwargs
     as they are internally used to flip the second sprite.
     """

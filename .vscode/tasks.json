@@ -8,13 +8,6 @@
             "windows": {
                 "command": "./tasks/format_and_lint.ps1"
             }
-        },
-        {
-            "label": "Lint Markdown files",
-            "type": "markdownlint",
-            "problemMatcher": [
-                "$markdownlint"
-            ]
         }
     ]
 }
