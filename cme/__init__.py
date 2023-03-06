@@ -14,3 +14,15 @@ def init_cme(
     app_name: str,
 ) -> None:
     config.app_name = app_name
+
+
+# Exports
+from arcade import color  # noqa
+from arcade import csscolor  # noqa
+from arcade import gl  # noqa
+
+__all__ = [
+    "color",
+    "csscolor",
+    "gl",
+]

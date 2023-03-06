@@ -7,7 +7,7 @@ ASSETS_PATH: Optional["AssetsPath"] = None
 
 
 class AssetsPath(Path):
-    def get_asset(self, asset: str) -> Path:
+    def find_asset(self, asset: str) -> Path:
         """
         Returns first occurrence of the provided filename.
 
@@ -20,6 +20,10 @@ class AssetsPath(Path):
             raise FileNotFoundError(
                 f"Could not find an asset with glob `{asset}`"
             )
+
+    def get(self, asset: str) -> Path:
+        """Alias for find_asset() method."""
+        return self.find_asset(asset)
 
 
 def set_assets_path(assets_path: Path | str) -> None:

@@ -9,3 +9,7 @@ ignore =
     E999
     # Undefined name
     F821
+
+    ## Ignored because they're unnecessary and annoying
+    # Line break after binary operator
+    W504

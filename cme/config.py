@@ -1,4 +1,4 @@
-"""This is used to save global, cross package variable, e.g. `app_name`"""
+"""This is used to save global, cross package variables, e.g. `app_name`"""
 
 
 # --- GLOBALS --- #

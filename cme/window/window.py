@@ -46,5 +46,3 @@ class Window(arcade.Window):
             samples=samples,
             enable_polling=enable_polling,
         )
-
-        ...
