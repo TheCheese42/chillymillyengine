@@ -1,3 +1,12 @@
+"""
+Provides an interface for a class to manage all settings of the game,
+optionally with multiple accounts/profiles as well as convenience functions.
+
+Register your implementation using the `register_custom_settings_class()`
+decorator.
+"""
+
+
 from __future__ import annotations
 
 import abc

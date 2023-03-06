@@ -1,4 +1,6 @@
-"""The Chilly Milly Engine Python Game Library"""
+"""
+The Chilly Milly Engine Python Game Library.
+"""
 
 import sys
 

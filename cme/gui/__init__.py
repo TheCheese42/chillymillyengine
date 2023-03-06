@@ -1,3 +1,9 @@
+"""
+Exports all gui related classes from the arcade library and adds custom
+Elements.
+"""
+
+
 # Arcade gui elements
 from arcade.gui.constructs import UIMessageBox
 from arcade.gui.events import (UIEvent, UIKeyEvent, UIKeyPressEvent,
@@ -19,11 +25,12 @@ from arcade.gui.widgets import (UIAnchorWidget, UIBorder, UIBoxLayout, UIDummy,
                                 UIWrapper)
 
 # Custom gui elements
-from .gui import UIFixedSizeLabel
+from .gui import UIBlinkingLabel, UIFixedSizeLabel
 
 __all__ = [
     "Surface",
     "UIAnchorWidget",
+    "UIBlinkingLabel",
     "UIBorder",
     "UIBoxLayout",
     "UIDraggableMixin",

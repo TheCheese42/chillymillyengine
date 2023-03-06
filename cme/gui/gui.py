@@ -1,4 +1,9 @@
-from typing import Any, Optional, Literal
+"""
+Defines custom gui elements.
+"""
+
+
+from typing import Any, Literal, Optional
 
 import arcade
 from arcade import gui

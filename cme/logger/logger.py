@@ -1,4 +1,6 @@
-"""Contains the LOGGER constant and convenience logging functions"""
+"""
+Provides the LOGGER constant and convenience logging functions.
+"""
 
 import logging
 from typing import Any, Optional

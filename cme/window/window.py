@@ -1,5 +1,10 @@
 from typing import Optional
 
+"""
+Contains a wrapper around the Window class from the arcade library.
+"""
+
+
 import arcade
 import pyglet
 

@@ -1,7 +1,6 @@
 """
-Holds Premade Sprite classes as well as the Base `arcade.Sprite` and
+Provides Premade Sprite classes as well as the Base `arcade.Sprite` and
 `arcade.SpriteList` classes.
-
 """
 
 from arcade import Sprite, SpriteList

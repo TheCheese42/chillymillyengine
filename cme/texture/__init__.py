@@ -1,4 +1,6 @@
-"""Exporting texture functions from the arade library"""
+"""
+Exporting texture functions and classes from the arade library.
+"""
 
 from arcade import Texture, load_texture, load_textures
 

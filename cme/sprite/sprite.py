@@ -1,3 +1,8 @@
+"""
+Contains several specific premade sprite classes.
+"""
+
+
 from __future__ import annotations
 
 import time

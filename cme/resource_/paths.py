@@ -1,3 +1,8 @@
+"""
+Holds several path constants.
+"""
+
+
 from pathlib import Path
 
 from config import app_name

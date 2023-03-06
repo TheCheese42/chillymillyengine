@@ -1,3 +1,8 @@
+"""
+Provides useful utility functions.
+"""
+
+
 from pyglet import text
 
 
