@@ -7,7 +7,8 @@ from typing import Any, Literal, Optional
 
 import arcade
 from arcade import gui
-from utils import get_optimal_font_size
+
+from ..utils import get_optimal_font_size
 
 
 class UIFixedSizeLabel(gui.UILabel):
@@ -17,7 +18,7 @@ class UIFixedSizeLabel(gui.UILabel):
     def update_text_size(self) -> None:
         """Sets the Text to the maximum possible size for the widget size."""
         optimal_font_size = get_optimal_font_size(
-            text_=self.text,
+            text=self.text,
             font_name=self.label.font_name,
             container_width=self.width,
             container_height=self.height,
@@ -178,7 +179,11 @@ class UIBlinkingLabel(gui.UILabel):
         opacity_per_second = distance_min_max / self.blink_speed
         # Calculate t (time) in this case the value to be added to self.opacity
         # while taking into account the delta_time
-        opacity_increment = distance_min_max / opacity_per_second * delta_time
+        opacity_increment = opacity_per_second * delta_time
+        # NOTICE: For some reason all tests failed because the above line was
+        # opacity_increment = distance_min_max/opacity_per_second*delta_time
+        # Removing the distance_min_max/ fixed them, I'm unsure why that was
+        # there. If anyone knows please tell.
 
         if self._fade_direction == "up":
             self._opacity += opacity_increment

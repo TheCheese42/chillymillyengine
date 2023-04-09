@@ -14,7 +14,10 @@ from typing import Optional
 ASSETS_PATH: Optional["AssetsPath"] = None
 
 
-class AssetsPath(Path):
+class AssetsPath(type(Path())):  # type: ignore
+    def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
+        return super().__new__(cls, *pathsegments)
+
     """
     Provides the find_asset method to recursively retrive the given asset.
 
@@ -43,5 +46,8 @@ class AssetsPath(Path):
 
 def set_assets_path(assets_path: Path | str) -> None:
     global ASSETS_PATH
-
     ASSETS_PATH = AssetsPath(Path(assets_path).resolve())
+
+
+def get_assets_path() -> Optional[AssetsPath]:
+    return ASSETS_PATH

@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from .logger import LOGGER, critical, debug, error, info, warning
+from .logger import LOGGER
 
 
 def configure_logger(
@@ -52,11 +52,20 @@ def configure_logger(
         LOGGER.addHandler(debug_handler)
 
 
+from logging import CRITICAL, DEBUG, ERROR, INFO, WARNING  # noqa
+
+from .logger import critical, debug, error, info, warning  # noqa
+
 __all__ = [
     "LOGGER",
+    "CRITICAL",
     "critical",
+    "DEBUG",
     "debug",
+    "ERROR",
     "error",
+    "INFO",
     "info",
+    "WARNING",
     "warning",
 ]

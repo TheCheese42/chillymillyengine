@@ -5,7 +5,7 @@ Provides the LOGGER constant and convenience logging functions.
 import logging
 from typing import Any, Optional
 
-LOGGER = logging.getLogger("chilly-milly-logger")
+LOGGER: logging.Logger = logging.getLogger("chilly-milly-logger")
 
 
 def debug(

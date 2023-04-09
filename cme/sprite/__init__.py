@@ -4,7 +4,8 @@ Provides Premade Sprite classes as well as the Base `arcade.Sprite` and
 """
 
 from arcade import Sprite, SpriteList
-from sprite import AnimatedSprite, AnimatedWalkingSprite
+
+from .sprite import AnimatedSprite, AnimatedWalkingSprite
 
 __all__ = [
     "AnimatedSprite",

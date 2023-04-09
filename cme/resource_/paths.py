@@ -5,8 +5,9 @@ Holds several path constants.
 
 from pathlib import Path
 
-from config import app_name
 from pyglet import resource
+
+from ..config import app_name
 
 # Appdata and settings path
 DATA_PATH = Path(resource.get_data_path(app_name))

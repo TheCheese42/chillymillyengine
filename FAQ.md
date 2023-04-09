@@ -1,6 +1,6 @@
 # FAQ
 
-## AttributeError: module 'config' has no attribute 'app_name'
+## ImportError: cannot import name 'app_name' from 'cme.config'
 
 You didn't properly initialized the engine. Run the `init_cme()` function as described in the README.
 

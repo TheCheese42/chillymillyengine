@@ -4,8 +4,6 @@ The Chilly Milly Engine Python Game Library.
 
 import sys
 
-import config
-
 if sys.version_info[0] < 3 or (
     sys.version_info[0] == 3 and sys.version_info[1] < 7
 ):
@@ -15,6 +13,7 @@ if sys.version_info[0] < 3 or (
 def init_cme(
     app_name: str,
 ) -> None:
+    from . import config
     config.app_name = app_name
 
 

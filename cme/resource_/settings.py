@@ -14,9 +14,11 @@ import json
 from pathlib import Path
 from typing import Any, Optional
 
-import logger
-
+from .. import logger
 from .paths import SETTINGS_PATH
+
+# Saves a custom Settings class provided by the user
+CUSTOM_SETTINGS_CLASS: Optional[type[Settings]] = None
 
 
 class Settings(metaclass=abc.ABCMeta):
@@ -101,20 +103,20 @@ class Settings(metaclass=abc.ABCMeta):
             json.dump(self._serialize(), fp)
 
 
-# Saves a custom Settings class provided by the user
-CUSTOM_SETTINGS_CLASS: Optional[type[Settings]] = None
-
-
 def register_custom_settings_class(cls: type[Settings]) -> type[Settings]:
     """Decorate your custom Settings class with this."""
+    global CUSTOM_SETTINGS_CLASS
     if CUSTOM_SETTINGS_CLASS is not None:
         logger.warning(
-            f"Registering class {cls.__name__} as custom settings class \
-            although {CUSTOM_SETTINGS_CLASS.__name__} already has been."
+            f"Registering class {cls.__name__} as custom settings class"
+            f"although {CUSTOM_SETTINGS_CLASS.__name__} already has been."
         )
-    global CUSTOM_SETTINGS_CLASS
     CUSTOM_SETTINGS_CLASS = cls
     return cls
+
+
+def get_settings() -> Optional[type[Settings]]:
+    return CUSTOM_SETTINGS_CLASS
 
 
 def load_settings(profile: Optional[str] = None) -> Settings:

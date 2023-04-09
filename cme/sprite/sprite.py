@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any, Literal, Optional
 
 import arcade
-import logger
-from enums import Facing
-from texture import load_texture
+
+from .. import logger
+from ..enums import Facing
+from ..texture import load_texture
 
 
 class AnimatedSprite(arcade.Sprite):
@@ -140,7 +141,9 @@ class AnimatedSprite(arcade.Sprite):
                     self.cur_texture_index
                 ]
             try:
-                self.texture = differently_faced_textures[self.facing]
+                self.texture = differently_faced_textures[
+                    self.facing  # type: ignore
+                ]                # (enum as index)
             except IndexError:
                 self.texture = differently_faced_textures[0]
                 logger.error(
@@ -157,7 +160,8 @@ class AnimatedSprite(arcade.Sprite):
         """
         Add a texture to the sprite. category is commonly a string like
         `idling`, `walking`, `jumping`, etc.
-        If given a tuple of Textures
+        If given a tuple of Textures, multiple facing directories are stored
+        and can later be accessed using the Facing enum from the enums module.
         """
 
         if isinstance(texture, tuple):
@@ -174,7 +178,7 @@ class AnimatedSprite(arcade.Sprite):
     def add_textures(
         self, textures: dict[str, list[tuple[arcade.Texture, ...]]]
     ) -> None:
-        """wwadwwwddawd
+        """
         Add multiple Textures to the sprite. `textures` parameter should be a
         dict with a str as key indicating the category and a list of Textures
         as value.
