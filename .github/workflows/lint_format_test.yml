@@ -1,3 +1,7 @@
+# --- THIS DOES NOT RUN ALL TESTS --- #
+# Tests requiring an OpenGL Context can't be run in headless mode.
+# ALWAYS test on your own machine before release or build.
+
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
@@ -44,4 +48,4 @@ jobs:
         mypy cme tests --ignore-missing-imports
     - name: Test with pytest
       run: |
-        pytest tests
+        pytest tests -m "not requires_window"
