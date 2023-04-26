@@ -1,7 +1,8 @@
 import tempfile
 from pathlib import Path
-import pytest
 from typing import Any, Generator
+
+import pytest
 
 
 @pytest.fixture

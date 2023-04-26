@@ -1,5 +1,6 @@
-from cme import utils
 import pytest
+
+from cme import utils
 
 
 @pytest.mark.requires_window

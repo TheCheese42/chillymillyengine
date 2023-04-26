@@ -1,9 +1,11 @@
-from cme import logger
 import logging
-import pytest
-from typing import Optional
-from contextlib import redirect_stdout
 import sys
+from contextlib import redirect_stdout
+from typing import Optional
+
+import pytest
+
+from cme import logger
 
 
 def test_logger_constant() -> None:

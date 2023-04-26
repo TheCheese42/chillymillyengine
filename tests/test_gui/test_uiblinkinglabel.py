@@ -1,6 +1,7 @@
-from cme.gui import UIBlinkingLabel
-import pytest
 import pyglet
+import pytest
+
+from cme.gui import UIBlinkingLabel
 
 
 @pytest.fixture

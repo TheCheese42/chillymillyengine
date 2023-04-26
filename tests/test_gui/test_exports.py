@@ -1,5 +1,6 @@
-from cme import gui
 import inspect
+
+from cme import gui
 
 
 def test_exports_arcade_gui_classes() -> None:

@@ -1,5 +1,6 @@
-import pytest
 import pyglet
+import pytest
+
 import cme
 
 
