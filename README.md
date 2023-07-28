@@ -12,7 +12,7 @@ from cme import init_cme
 init_cme(app_name="Foo")
 ```
 
-### Confiugure logger
+### Configure logger
 
 To setup the logging module you should configure the engine's logger:
 
