@@ -45,7 +45,17 @@ jobs:
         flake8 cme tests --count --exit-zero --statistics
     - name: Typecheck with mypy
       run: |
-        mypy cme tests --ignore-missing-imports
+        mypy cme tests \
+          --follow-imports=silent \
+          --ignore-missing-imports \
+          --show-column-numbers \
+          --no-pretty \
+          --disallow-any-generics \
+          --disallow-untyped-calls \
+          --disallow-untyped-defs \
+          --disallow-incomplete-defs \
+          --disallow-untyped-decorators \
+          --warn-unused-ignores \
     - name: Test with pytest
       run: |
         pytest tests -m "not requires_window"
