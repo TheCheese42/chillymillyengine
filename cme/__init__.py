@@ -21,9 +21,11 @@ def init_cme(
 from arcade import color  # noqa
 from arcade import csscolor  # noqa
 from arcade import gl  # noqa
+from arcade import key  # noqa
 
 __all__ = [
     "color",
     "csscolor",
     "gl",
+    "key",
 ]

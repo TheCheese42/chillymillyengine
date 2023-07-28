@@ -1,6 +1,6 @@
 # Chilly Milly Engine
 
-Game Engine for all Chilly Milly Games
+Game Engine for Chilly Milly Games.
 
 ## First steps
 
