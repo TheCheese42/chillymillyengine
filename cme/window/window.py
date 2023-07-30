@@ -1,9 +1,8 @@
-from typing import Optional
-
 """
 Contains a wrapper around the Window class from the arcade library.
 """
 
+from typing import Optional
 
 import arcade
 import pyglet
@@ -11,8 +10,8 @@ import pyglet
 
 class Window(arcade.Window):
     """
-    Wrapper around `arcade.Window`. Will eventualle provide helper
-    methods and extra attributes
+    Wrapper around `arcade.Window`. Will eventually provide helper
+    methods and extra attributes.
     """
     def __init__(
         self,
@@ -21,7 +20,7 @@ class Window(arcade.Window):
         title: Optional[str] = 'Arcade Window',
         fullscreen: bool = False,
         resizable: bool = False,
-        update_rate: Optional[float] = 1 / 60,
+        update_rate: float = 1 / 60,
         antialiasing: bool = True,
         gl_version: tuple[int, int] = (3, 3),
         screen: pyglet.canvas.Screen = None,

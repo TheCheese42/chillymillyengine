@@ -307,6 +307,6 @@ def load_texture_pair(
     """
 
     return (
-        load_texture(file_name, **kwargs),
-        load_texture(file_name, flipped_horizontally=True, **kwargs),
+        texture := load_texture(file_name, **kwargs),
+        texture.flip_horizontally(),
     )
