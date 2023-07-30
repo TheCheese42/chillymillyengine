@@ -78,7 +78,7 @@ class UIBlinkingLabel(gui.UILabel):
             size_hint_min=size_hint_min,
             size_hint_max=size_hint_max,
             style=style,
-            **kwargs
+            **kwargs,
         )
 
         # Set property defaults

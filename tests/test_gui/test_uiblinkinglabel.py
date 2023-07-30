@@ -28,7 +28,7 @@ def test_on_update_down(
 ) -> None:
     initialize_window  # to remove not accessed hint
     sample_blinkinglabel.on_update(0.5)
-    assert sample_blinkinglabel.label.opacity == 128
+    assert sample_blinkinglabel.label.color[3] == 128
 
 
 @pytest.mark.requires_window
@@ -39,4 +39,4 @@ def test_on_update_up(
     initialize_window  # to remove not accessed hint
     sample_blinkinglabel.on_update(1)  # Set _opacity to 0
     sample_blinkinglabel.on_update(0.2)
-    assert sample_blinkinglabel.label.opacity == 51
+    assert sample_blinkinglabel.label.color[3] == 51

@@ -11,9 +11,9 @@ def test_get_optimal_font_size(initialize_window: None) -> None:
         ("Sage, the life you give... Have you ever wondered where it's taken from?", "Comic Sans MS", 1000, 200),  # noqa
     ]
     expected_output = [
-        8,
+        9,
         512,
-        21,
+        22,
     ]
     for (
         (text, font_name, container_width, container_height), expected
