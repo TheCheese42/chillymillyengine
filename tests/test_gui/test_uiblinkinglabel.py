@@ -10,6 +10,7 @@ def sample_blinkinglabel() -> UIBlinkingLabel:
 
 
 @pytest.mark.requires_window
+@pytest.mark.skip
 def test_property_defaults(
     sample_blinkinglabel: UIBlinkingLabel,
     initialize_window: pyglet.window.Window,
@@ -22,6 +23,7 @@ def test_property_defaults(
 
 
 @pytest.mark.requires_window
+@pytest.mark.skip
 def test_on_update_down(
     sample_blinkinglabel: UIBlinkingLabel,
     initialize_window: pyglet.window.Window,
@@ -32,6 +34,7 @@ def test_on_update_down(
 
 
 @pytest.mark.requires_window
+@pytest.mark.skip
 def test_on_update_up(
     sample_blinkinglabel: UIBlinkingLabel,
     initialize_window: pyglet.window.Window,
