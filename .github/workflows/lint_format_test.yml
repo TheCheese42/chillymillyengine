@@ -46,15 +46,7 @@ jobs:
     - name: Typecheck with mypy
       run: |
         mypy cme tests \
-          --follow-imports=silent \
           --ignore-missing-imports \
-          --show-column-numbers \
-          --no-pretty \
-          --disallow-any-generics \
-          --disallow-untyped-calls \
-          --disallow-untyped-defs \
-          --disallow-incomplete-defs \
-          --disallow-untyped-decorators \
           --warn-unused-ignores \
           --strict \
     - name: Test with pytest

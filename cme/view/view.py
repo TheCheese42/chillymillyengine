@@ -28,26 +28,26 @@ class FadingView(arcade.View):
         self._fade_out: Optional[float] = None
         self._fade_in: Optional[float] = None
 
-    def start_fade_in(self):
+    def start_fade_in(self) -> None:
         """
         Start the fading. Usually called right when the view was constructed
         and set up.
         """
         self._fade_in = 255.0
 
-    def start_fade_out(self):
+    def start_fade_out(self) -> None:
         """
         Start the fading. Usually called right when the view is about to
         change.
         """
         self._fade_out = 0.0
 
-    def on_update(self, delta_time: float):
+    def on_update(self, delta_time: float) -> None:
         """Overridden to call the update_fade() method."""
         super().on_update(delta_time)
         self.update_fade(delta_time)
 
-    def update_fade(self, delta_time: float):
+    def update_fade(self, delta_time: float) -> None:
         """
         Updates the fade while taking into account `the delta_time` value.
         """
@@ -63,14 +63,14 @@ class FadingView(arcade.View):
             if self._fade_in <= 0:
                 self._fade_in = None
 
-    def draw_fading(self):
+    def draw_fading(self) -> None:
         if self._fade_out is not None:
             arcade.draw_rectangle_filled(
                 center_x=self.window.width / 2,
                 center_y=self.window.height / 2,
                 width=self.window.width,
                 height=self.window.height,
-                color=(0, 0, 0, self._fade_out),
+                color=(0, 0, 0, int(self._fade_out)),
             )
 
         if self._fade_in is not None:
@@ -79,5 +79,5 @@ class FadingView(arcade.View):
                 center_y=self.window.height / 2,
                 width=self.window.width,
                 height=self.window.height,
-                color=(0, 0, 0, self._fade_in),
+                color=(0, 0, 0, int(self._fade_in)),
             )
