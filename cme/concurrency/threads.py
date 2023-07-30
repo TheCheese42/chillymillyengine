@@ -8,12 +8,12 @@ from typing import Any, Callable, Iterable, Mapping, Optional
 
 def start_helper_thread(
     *,
-    target: Callable,
+    target: Callable[[Any], None],
     name: Optional[str] = None,
     args: Iterable[Any] = (),
     kwargs: Optional[Mapping[str, Any]] = None,
     daemon: Optional[bool] = None,
-    callback: Optional[Callable] = None,
+    callback: Optional[Callable[[], None]] = None,
 ) -> None:
     """
     Opens a helper thread for blocking tasks to not block the mainloop. If
@@ -22,7 +22,7 @@ def start_helper_thread(
     You can specify a `callback` function to get notified when the thread has
     finished.
     """
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: tuple[Any], **kwargs: Mapping[Any, Any]):
         target(*args, **kwargs)
         if callback:
             callback()

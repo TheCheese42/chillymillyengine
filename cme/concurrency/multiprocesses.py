@@ -13,12 +13,12 @@ multiprocessing.freeze_support()
 
 def start_worker_process(
     *,
-    target: Callable,
+    target: Callable[[], None],
     name: Optional[str] = None,
     args: Iterable[Any] = (),
     kwargs: Mapping[str, Any] = {},
     daemon: Optional[bool] = None,
-    callback: Optional[Callable] = None,
+    callback: Optional[Callable[[], None]] = None,
 ) -> None:
     """
     Opens a worker process for heavy, blocking tasks. Enables usage of multiple
@@ -26,7 +26,7 @@ def start_worker_process(
     You can specify a `callback` function to get notified when the process has
     finished.
     """
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: tuple[Any], **kwargs: Mapping[Any, Any]):
         target(*args, **kwargs)
         if callback:
             callback()
