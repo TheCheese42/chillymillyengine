@@ -5,8 +5,8 @@ Defines custom gui elements.
 
 from typing import Any, Literal, Optional
 
-import arcade
 from arcade import gui
+from arcade import types
 
 from ..utils import get_optimal_font_size
 
@@ -19,7 +19,7 @@ class UIFixedSizeLabel(gui.UILabel):
         """Sets the Text to the maximum possible size for the widget size."""
         optimal_font_size = get_optimal_font_size(
             text=self.text,
-            font_name=self.label.font_name,
+            font_name=self.label.font_name,  # type: ignore
             container_width=self.width,
             container_height=self.height,
         )
@@ -41,7 +41,7 @@ class UIBlinkingLabel(gui.UILabel):
         text: str = "",
         font_name: tuple[str, ...] = ('Arial',),
         font_size: float = 12,
-        text_color: arcade.Color = (255, 255, 255, 255),
+        text_color: types.Color = types.Color(255, 255, 255, 255),
         bold: bool = False,
         italic: bool = False,
         stretch: bool = False,
@@ -78,7 +78,7 @@ class UIBlinkingLabel(gui.UILabel):
             size_hint_min=size_hint_min,
             size_hint_max=size_hint_max,
             style=style,
-            **kwargs
+            **kwargs,
         )
 
         # Set property defaults
@@ -180,7 +180,7 @@ class UIBlinkingLabel(gui.UILabel):
         # Calculate t (time) in this case the value to be added to self.opacity
         # while taking into account the delta_time
         opacity_increment = opacity_per_second * delta_time
-        # NOTICE: For some reason all tests failed because the above line was
+        # NOTE: For some reason all tests failed because the above line was
         # opacity_increment = distance_min_max/opacity_per_second*delta_time
         # Removing the distance_min_max/ fixed them, I'm unsure why that was
         # there. If anyone knows please tell.
@@ -200,4 +200,5 @@ class UIBlinkingLabel(gui.UILabel):
         # If do_fade is True, update anyway
         # Otherwise only if fade_min/fade_max was reached
         if self.do_fade or self._opacity in (self.fade_min, self.fade_max):
-            self.label.opacity = round(self._opacity)
+            r, g, b, _ = self.label.color
+            self.label.color = types.Color(r, g, b, round(self._opacity))
