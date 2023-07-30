@@ -19,7 +19,7 @@ def test_fit_content_blocked(sample_fixedlabel: UIFixedSizeLabel) -> None:
 def test_update_text_size(sample_fixedlabel: UIFixedSizeLabel) -> None:
     optimal_font_size = get_optimal_font_size(
         sample_fixedlabel.text,
-        sample_fixedlabel.label.font_name,
+        sample_fixedlabel.label.font_name,  # type: ignore
         sample_fixedlabel.width,
         sample_fixedlabel.height,
     )
