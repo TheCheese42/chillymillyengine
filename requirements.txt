@@ -1,2 +1,2 @@
-arcade>=2.6.17
+arcade @ git+https://github.com/pythonarcade/arcade@development
 pyglet>=2.0.dev23

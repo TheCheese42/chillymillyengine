@@ -56,6 +56,7 @@ jobs:
           --disallow-incomplete-defs \
           --disallow-untyped-decorators \
           --warn-unused-ignores \
+          --strict \
     - name: Test with pytest
       run: |
         pytest tests -m "not requires_window"

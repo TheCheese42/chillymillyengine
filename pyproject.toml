@@ -12,7 +12,7 @@ description = "Game engine for Chilly Milly Games."
 readme = "README.md"
 requires-python = "==3.9.13"
 dependencies = [
-    "arcade>=2.6.17",
+    "arcade @ git+https://github.com/pythonarcade/arcade@development",
     "pyglet>=2.0.dev23",
 ]
 
