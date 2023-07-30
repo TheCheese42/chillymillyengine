@@ -26,7 +26,7 @@ def start_worker_process(
     You can specify a `callback` function to get notified when the process has
     finished.
     """
-    def wrapper(*args: tuple[Any], **kwargs: Mapping[Any, Any]):
+    def wrapper(*args: tuple[Any], **kwargs: Mapping[Any, Any]) -> None:
         target(*args, **kwargs)
         if callback:
             callback()
