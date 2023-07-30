@@ -56,7 +56,7 @@ class AnimatedSprite(arcade.Sprite):
         """
 
         super().__init__(
-            filename=filename,  # type: ignore
+            filename=filename,
             scale=scale,
             image_x=image_x,
             image_y=image_y,
@@ -71,7 +71,7 @@ class AnimatedSprite(arcade.Sprite):
             flipped_diagonally=flipped_diagonally,
             hit_box_algorithm=hit_box_algorithm,
             hit_box_detail=hit_box_detail,
-            texture=texture,  # type: ignore
+            texture=texture,
             angle=angle,
         )
 

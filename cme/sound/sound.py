@@ -50,7 +50,7 @@ def play_sound(
 
 def stop_sound(player: Player) -> None:
     """Exists to complete the sound control set."""
-    return arcade.stop_sound(player)
+    arcade.stop_sound(player)
 
 
 def pause_all_sounds() -> None:
