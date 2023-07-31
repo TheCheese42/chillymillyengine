@@ -3,6 +3,8 @@ import pytest
 
 import cme
 
+pyglet.options['shadow_window'] = False
+
 
 @pytest.fixture(scope="session")
 def initialize_window() -> pyglet.window.Window:
