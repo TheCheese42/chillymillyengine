@@ -1,9 +1,10 @@
 import pyglet
+
+pyglet.options['shadow_window'] = False
+
 import pytest
 
 from cme import init_cme
-
-pyglet.options['shadow_window'] = False
 
 
 @pytest.mark.requires_window
