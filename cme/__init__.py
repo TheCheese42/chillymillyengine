@@ -18,10 +18,7 @@ def init_cme(
 
 
 # Exports
-from arcade import color  # noqa
-from arcade import csscolor  # noqa
-from arcade import gl  # noqa
-from arcade import key  # noqa
+from arcade import color, csscolor, gl, key  # noqa
 
 __all__ = [
     "color",
