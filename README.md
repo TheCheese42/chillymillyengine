@@ -24,3 +24,7 @@ configure_logger(level=logging.INFO, debug=True)
 ```
 
 If the level is left out, it will be `logging.DEBUG` or `logging.WARNING`, depending on if the `__debug__` constant is True or not. Similarly the debug parameter defaults to said constant.
+
+## Testing
+
+Testing has to be done locally as the GitHub remote is running headless. Now with the transition to arcade 3 excluding the `requires_window` mark doesn't work either anymore.
