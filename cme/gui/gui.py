@@ -44,16 +44,11 @@ class UIBlinkingLabel(gui.UILabel):
         text_color: types.Color = types.Color(255, 255, 255, 255),
         bold: bool = False,
         italic: bool = False,
-        stretch: bool = False,
-        anchor_x: str = 'left',
-        anchor_y: str = 'bottom',
         align: str = 'left',
-        dpi: Optional[int] = None,
         multiline: bool = False,
         size_hint: Optional[tuple[float, float]] = None,
         size_hint_min: Optional[tuple[float, float]] = None,
         size_hint_max: Optional[tuple[float, float]] = None,
-        style: Any = None,
         **kwargs: Any
     ) -> None:
         """`arcade.gui.UILabel` constructor."""
@@ -68,16 +63,11 @@ class UIBlinkingLabel(gui.UILabel):
             text_color=text_color,
             bold=bold,
             italic=italic,
-            stretch=stretch,
-            anchor_x=anchor_x,
-            anchor_y=anchor_y,
             align=align,
-            dpi=dpi,
             multiline=multiline,
             size_hint=size_hint,
             size_hint_min=size_hint_min,
             size_hint_max=size_hint_max,
-            style=style,
             **kwargs,
         )
 
