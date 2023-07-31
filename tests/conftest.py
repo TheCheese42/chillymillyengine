@@ -6,7 +6,8 @@ from cme import init_cme
 
 @pytest.mark.requires_window
 @pytest.fixture(scope="session")
-def initialize_window():# -> pyglet.window.Window:
+def initialize_window():  # type: ignore 
+    # -> pyglet.window.Window:
     window = pyglet.window.Window()
     yield window
     window.close()
