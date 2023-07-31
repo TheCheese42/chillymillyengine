@@ -1,9 +1,10 @@
 import pyglet
 import pytest
 
-import cme
+from cme import init_cme
 
 
+@pytest.mark.requires_window
 @pytest.fixture(scope="session")
 def initialize_window() -> pyglet.window.Window:
     window = pyglet.window.Window()
@@ -13,4 +14,4 @@ def initialize_window() -> pyglet.window.Window:
 
 @pytest.fixture(scope="session", autouse=True)
 def initialize_cme() -> None:
-    cme.init_cme("Test Suite")
+    init_cme("Test Suite")
