@@ -5,8 +5,7 @@ Defines custom gui elements.
 
 from typing import Any, Literal, Optional
 
-from arcade import gui
-from arcade import types
+from arcade import gui, types
 
 from ..utils import get_optimal_font_size
 
