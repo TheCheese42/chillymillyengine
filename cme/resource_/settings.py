@@ -41,11 +41,11 @@ class Settings(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass: Any) -> Any:
         return (
-            hasattr(subclass, 'load_data_source') and
-            callable(subclass.load_data_source) and
-            hasattr(subclass, 'extract_text') and
-            callable(subclass.extract_text) or
-            NotImplemented
+            hasattr(subclass, "load_data_source")
+            and callable(subclass.load_data_source)
+            and hasattr(subclass, "extract_text")
+            and callable(subclass.extract_text)
+            or NotImplemented
         )
 
     def reset_to_default(self) -> None:
@@ -65,7 +65,7 @@ class Settings(metaclass=abc.ABCMeta):
 
     @staticmethod
     @abc.abstractmethod
-    def defaults() -> dict[Any, Any]:
+    def defaults() -> dict[str, Any]:
         """
         Returns a dictionary containing a serialized Settings object
         with default values.
@@ -74,12 +74,12 @@ class Settings(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def _deserialize(cls, dictionary: dict[Any, Any]) -> Settings:
+    def _deserialize(cls, dictionary: dict[str, Any]) -> Settings:
         """Instantiates the class from a serialized dictionary."""
         raise NotImplementedError
 
     @abc.abstractmethod
-    def _serialize(self) -> dict[Any, Any]:
+    def _serialize(self) -> dict[str, Any]:
         """Serializes the object into a dictionary."""
         raise NotImplementedError
 
