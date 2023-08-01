@@ -7,7 +7,7 @@
 
 # Modified to run isort and mypy
 
-name: Python application
+name: Static Analysis and Tests
 
 on:
   push:
