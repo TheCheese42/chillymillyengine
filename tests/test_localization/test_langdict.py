@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 @pytest.fixture
-def sample_files_dir() -> str:
+def sample_files_dir() -> str:  # type: ignore
     """Provides a tempdir with files `en_US.toml` and `de_DE.toml`."""
     with TemporaryDirectory() as tempdir:
         with open(Path(tempdir) / "en_US.toml", "w", encoding="utf-8") as fp:

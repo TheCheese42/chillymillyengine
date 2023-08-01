@@ -47,8 +47,8 @@ jobs:
       run: |
         mypy cme tests \
           --ignore-missing-imports \
-          --warn-unused-ignores \
           --strict \
+          --no-warn-unused-ignores \
     - name: Test with pytest
       run: |
          pytest tests -m "not requires_window"

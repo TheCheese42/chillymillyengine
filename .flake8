@@ -11,5 +11,7 @@ ignore =
     F821
 
     ## Ignored because they're unnecessary and annoying
+    # Line break before binary operator
+    W503
     # Line break after binary operator
     W504

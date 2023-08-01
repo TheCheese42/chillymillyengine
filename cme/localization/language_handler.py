@@ -4,7 +4,7 @@ from __future__ import annotations
 
 try:
     import tomlib  # type: ignore
-except:
+except ImportError:
     import tomli as tomlib
 
 from pathlib import Path
@@ -14,11 +14,14 @@ from .. import logger
 DEFAULT_LANGUAGE = "en_US"
 
 
-class LangDict(dict):
+class LangDict(dict):  # type: ignore
+    langcode: str
+    langs_path: Path
+
     """Special dictionary to handle language files."""
     def __getitem__(self, key: str) -> str:
         try:
-            value = super().__getitem__(key)
+            value = str(super().__getitem__(key))
         except KeyError:
             if self.langcode == DEFAULT_LANGUAGE:
                 raise KeyError(f"Language string {key} does not exist.")
