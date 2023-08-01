@@ -1,7 +1,9 @@
-from cme.localization import LangDict
-from tempfile import TemporaryDirectory
-import pytest
 from pathlib import Path
+from tempfile import TemporaryDirectory
+
+import pytest
+
+from cme.localization import LangDict
 
 
 @pytest.fixture
@@ -23,21 +25,25 @@ def test_langdict_default_lang_access(sample_files_dir: str) -> None:
     lang_dict = LangDict.from_langcode("en_US")
     assert lang_dict["hello"] == "Hello"
 
+
 def test_langdict_default_key_error(sample_files_dir: str) -> None:
     LangDict.set_languages_path(sample_files_dir)
     lang_dict = LangDict.from_langcode("en_US")
     with pytest.raises(KeyError):
         lang_dict["non-available-key"]
 
+
 def test_langdict_non_default_lang_access(sample_files_dir: str) -> None:
     LangDict.set_languages_path(sample_files_dir)
     lang_dict = LangDict.from_langcode("de_DE")
     assert lang_dict["hello"] == "Hallo"
 
+
 def test_langdict_non_default_fallback(sample_files_dir: str) -> None:
     LangDict.set_languages_path(sample_files_dir)
     lang_dict = LangDict.from_langcode("de_DE")
     assert lang_dict["fallback"] == "Fallback"
+
 
 def test_langdict_non_default_key_error(sample_files_dir: str) -> None:
     LangDict.set_languages_path(sample_files_dir)
