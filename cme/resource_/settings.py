@@ -41,10 +41,26 @@ class Settings(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass: Any) -> Any:
         return (
-            hasattr(subclass, "load_data_source")
-            and callable(subclass.load_data_source)
-            and hasattr(subclass, "extract_text")
-            and callable(subclass.extract_text)
+            hasattr(subclass, "reset_to_default")
+            and callable(subclass.reset_to_default)
+            and hasattr(subclass, "from_file")
+            and callable(subclass.from_file)
+            and hasattr(subclass, "from_json")
+            and callable(subclass.from_json)
+            and hasattr(subclass, "defaults")
+            and callable(subclass.defaults)
+            and hasattr(subclass, "_deserialize")
+            and callable(subclass._deserialize)
+            and hasattr(subclass, "_serialize")
+            and callable(subclass._serialize)
+            and hasattr(subclass, "update")
+            and callable(subclass.update)
+            and hasattr(subclass, "apply")
+            and callable(subclass.apply)
+            and hasattr(subclass, "with_defaults")
+            and callable(subclass.with_defaults)
+            and hasattr(subclass, "save_to_file")
+            and callable(subclass.save_to_file)
             or NotImplemented
         )
 
