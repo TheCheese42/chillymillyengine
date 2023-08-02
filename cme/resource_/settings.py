@@ -131,10 +131,6 @@ def register_custom_settings_class(cls: type[Settings]) -> type[Settings]:
     return cls
 
 
-def get_settings() -> Optional[type[Settings]]:
-    return CUSTOM_SETTINGS_CLASS
-
-
 def load_settings(profile: Optional[str] = None) -> Settings:
     """
     Load Settings object from standard directory.
