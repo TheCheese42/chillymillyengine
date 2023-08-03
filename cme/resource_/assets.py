@@ -15,15 +15,15 @@ ASSETS_PATH: Optional["AssetsPath"] = None
 
 
 class AssetsPath(type(Path())):  # type: ignore
-    def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
-        return super().__new__(cls, *pathsegments)  # type: ignore
-
     """
     Provides the find_asset method to recursively retrive the given asset.
 
     Subclass or instantiate this to create a hierarchie of assets folders
     (e.g. `ImagesPath`, `SoundsPath`, ...).
     """
+
+    def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
+        return super().__new__(cls, *pathsegments)  # type: ignore
 
     def find_asset(self, asset: str) -> Path:
         """

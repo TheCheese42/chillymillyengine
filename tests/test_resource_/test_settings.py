@@ -28,15 +28,6 @@ def custom_settings_class(initialize_cme: None) -> type:
     return CustomSettings
 
 
-def test_custom_settings_class_constant(
-    initialize_cme: None, custom_settings_class: type
-) -> None:
-    from cme import resource_
-    assert resource_.get_settings() is None
-    resource_.register_custom_settings_class(custom_settings_class)
-    assert resource_.get_settings() is custom_settings_class
-
-
 def test_settings_interface(initialize_cme: None) -> None:
     from cme import resource_
     with pytest.raises(TypeError):

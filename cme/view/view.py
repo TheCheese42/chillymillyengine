@@ -11,8 +11,12 @@ class View(arcade.View):
     def __init__(self, window: Optional[arcade.Window] = None):
         super().__init__(window)
 
+    def on_draw(self) -> None:
+        super().on_draw()  # type: ignore
+        self.clear()
 
-class FadingView(arcade.View):
+
+class FadingView(View):
     """Implements logic to fade a view in and/or out."""
     def __init__(
         self, window: Optional[arcade.Window] = None,
@@ -81,3 +85,7 @@ class FadingView(arcade.View):
                 height=self.window.height,
                 color=(0, 0, 0, int(self._fade_in)),
             )
+
+    def on_draw(self) -> None:
+        super().on_draw()
+        self.draw_fading()
