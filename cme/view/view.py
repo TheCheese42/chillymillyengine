@@ -11,6 +11,9 @@ class View(arcade.View):
     def __init__(self, window: Optional[arcade.Window] = None):
         super().__init__(window)
 
+    def setup(self) -> None:
+        pass
+
     def on_draw(self) -> None:
         super().on_draw()  # type: ignore
         self.clear()
@@ -21,6 +24,7 @@ class FadingView(View):
     def __init__(
         self, window: Optional[arcade.Window] = None,
         fade_rate: int = 5,
+        next_view: Optional[type[View]] = None,
     ):
         """
         `fade_rate` is the increase/decrease rate of the views opacity per
@@ -29,6 +33,7 @@ class FadingView(View):
         """
         super().__init__(window)
         self.fade_rate = fade_rate
+        self.next_view = next_view
         self._fade_out: Optional[float] = None
         self._fade_in: Optional[float] = None
 
@@ -60,7 +65,12 @@ class FadingView(View):
         if self._fade_out is not None:
             self._fade_out += step
             if self._fade_out > 255:
-                self._fade_out = 255
+                if self.next_view:
+                    next_view = self.next_view()
+                    next_view.setup()
+                    self.window.show_view(next_view)
+                else:
+                    self._fade_out = 255
 
         if self._fade_in is not None:
             self._fade_in -= step
