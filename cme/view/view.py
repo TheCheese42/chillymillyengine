@@ -5,6 +5,7 @@ Contains a wrapper around the Window class from the arcade library.
 from typing import Optional
 
 import arcade
+
 import cme.shapes
 
 
