@@ -5,6 +5,7 @@ Contains a wrapper around the Window class from the arcade library.
 from typing import Optional
 
 import arcade
+import cme.shapes
 
 
 class View(arcade.View):
@@ -23,7 +24,7 @@ class FadingView(View):
     """Implements logic to fade a view in and/or out."""
     def __init__(
         self, window: Optional[arcade.Window] = None,
-        fade_rate: int = 5,
+        fade_rate: int = 200,
         next_view: Optional[type[View]] = None,
     ):
         """
@@ -79,7 +80,7 @@ class FadingView(View):
 
     def draw_fading(self) -> None:
         if self._fade_out is not None:
-            arcade.draw_rectangle_filled(
+            cme.shapes.draw_rectangle_filled(
                 center_x=self.window.width / 2,
                 center_y=self.window.height / 2,
                 width=self.window.width,
@@ -88,14 +89,10 @@ class FadingView(View):
             )
 
         if self._fade_in is not None:
-            arcade.draw_rectangle_filled(
+            cme.shapes.draw_rectangle_filled(
                 center_x=self.window.width / 2,
                 center_y=self.window.height / 2,
                 width=self.window.width,
                 height=self.window.height,
                 color=(0, 0, 0, int(self._fade_in)),
             )
-
-    def on_draw(self) -> None:
-        super().on_draw()
-        self.draw_fading()

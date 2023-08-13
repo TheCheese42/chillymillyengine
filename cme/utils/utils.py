@@ -57,3 +57,29 @@ def get_optimal_font_size(
             max_size = mid_size - 1
 
     return min_size
+
+
+def str2bool(string: str, return_false_on_error: bool = False) -> bool:
+    """Parses a string for a boolean value.
+
+    Args:
+        string (str): The string to be parsed.
+        return_false_on_error (bool, optional): Wether an exception should be
+        raised when the string is unidentifyable or not. If `True` no exception
+        will be raised and the function returns `None`. Defaults to False.
+
+    Raises:
+        ValueError: The string is unidentifyable. Only raises when
+        `return_false_on_error` is set to `False`.
+
+    Returns:
+        bool: The parsed boolean.
+    """
+    true = ["true", "t", "1", "y", "yes", "enabled", "enable", "on"]
+    false = ["false", "f", "0", "n", "no", "disabled", "disable", "off"]
+    if string.lower() in true:
+        return True
+    elif string.lower() in false or return_false_on_error:
+        return False
+    else:
+        raise ValueError(f"The value {string} cannot be mapped to boolean.")

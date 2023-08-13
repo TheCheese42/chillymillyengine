@@ -15,8 +15,7 @@ def debug(
     **kwargs: Any
 ) -> None:
     """Logs at debug level using the engine-wide `chilly-milly-logger`."""
-    if LOGGER.isEnabledFor(logging.DEBUG):  # Performance tweak
-        return LOGGER.debug(msg, *args, exc_info=exc_info, **kwargs)
+    return LOGGER.debug(msg, *args, exc_info=exc_info, **kwargs)
 
 
 def info(
@@ -26,8 +25,7 @@ def info(
     **kwargs: Any
 ) -> None:
     """Logs at info level using the engine-wide `chilly-milly-logger`."""
-    if LOGGER.isEnabledFor(logging.INFO):  # Performance tweak
-        return LOGGER.info(msg, *args, exc_info=exc_info, **kwargs)
+    return LOGGER.info(msg, *args, exc_info=exc_info, **kwargs)
 
 
 def warning(

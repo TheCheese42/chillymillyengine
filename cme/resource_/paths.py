@@ -17,3 +17,4 @@ SETTINGS_PATH.mkdir(exist_ok=True)
 
 # Logs
 LOGS_PATH = DATA_PATH / "logs"
+LOGS_PATH.mkdir(exist_ok=True)
