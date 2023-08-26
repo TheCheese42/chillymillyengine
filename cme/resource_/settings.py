@@ -41,9 +41,7 @@ class Settings(metaclass=abc.ABCMeta):
     @classmethod
     def __subclasshook__(cls, subclass: Any) -> Any:
         return (
-            hasattr(subclass, "reset_to_default")
-            and callable(subclass.reset_to_default)
-            and hasattr(subclass, "from_file")
+            hasattr(subclass, "from_file")
             and callable(subclass.from_file)
             and hasattr(subclass, "from_json")
             and callable(subclass.from_json)
@@ -63,10 +61,6 @@ class Settings(metaclass=abc.ABCMeta):
             and callable(subclass.save_to_file)
             or NotImplemented
         )
-
-    def reset_to_default(self) -> None:
-        """Resets the settings to their default values."""
-        self.update(**self.defaults())
 
     @classmethod
     def from_file(cls, file: str | Path) -> Settings:
@@ -124,7 +118,7 @@ def register_custom_settings_class(cls: type[Settings]) -> type[Settings]:
     global CUSTOM_SETTINGS_CLASS
     if CUSTOM_SETTINGS_CLASS is not None:
         logger.warning(
-            f"Registering class {cls.__name__} as custom settings class"
+            f"Registering class {cls.__name__} as custom settings class "
             f"although {CUSTOM_SETTINGS_CLASS.__name__} already has been."
         )
     CUSTOM_SETTINGS_CLASS = cls

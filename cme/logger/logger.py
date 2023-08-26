@@ -6,6 +6,7 @@ import logging
 from typing import Any, Optional
 
 LOGGER: logging.Logger = logging.getLogger("chilly-milly-logger")
+LOGGER.setLevel(10)
 
 
 def debug(

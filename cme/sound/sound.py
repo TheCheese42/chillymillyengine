@@ -19,13 +19,16 @@ from pyglet.media import Player
 
 def load_sound(
     path: str | Path,
-    streaming: bool = False
+    streaming: bool = False,
+    is_music: bool = False,
 ) -> Optional[arcade.Sound]:
     """
     `streaming` parameter should be True for very long music
     and False otherwise.
     """
-    return arcade.load_sound(path=path, streaming=streaming)
+    sound = arcade.load_sound(path=path, streaming=streaming)
+    sound.is_music = is_music
+    return sound
 
 
 def play_sound(
@@ -33,19 +36,20 @@ def play_sound(
     volume: int,
     pan: float = 0,
     looping: bool = False,
-    speed: float = 1
+    speed: float = 1,
 ) -> Player:
     """
     `volume` should be between 0 and 1.
     This wrapper function exists to force the programmer to provide a volume.
     """
-    return arcade.play_sound(
+    player = arcade.play_sound(
         sound=sound,
         volume=volume,
         pan=pan,
         looping=looping,
         speed=speed,
     )
+    player.is_music = sound.is_music if hasattr(sound, "is_music") else False
 
 
 def stop_sound(player: Player) -> None:
@@ -53,22 +57,36 @@ def stop_sound(player: Player) -> None:
     arcade.stop_sound(player)
 
 
+def is_music(player_or_sound: Player | arcade.Sound):
+    if not hasattr(player_or_sound, "is_music"):
+        return False
+    return player_or_sound.is_music
+
+
+def is_sound(player_or_sound: Player | arcade.Sound):
+    if not hasattr(player_or_sound, "is_music"):
+        return True
+    return not player_or_sound.is_music
+
+
 def pause_all_sounds() -> None:
-    """Pauses all playing players"""
-    for obj in gc.get_objects():
-        if isinstance(obj, Player):
-            obj.pause()
+    """Pauses all playing players."""
+    for player in get_all_player_instances():
+        player.pause()
 
 
 def resume_all_sounds() -> None:
-    """Resumes all paused players"""
-    for obj in gc.get_objects():
-        if isinstance(obj, Player):
-            obj.play()
+    """Resumes all paused players."""
+    for player in get_all_player_instances():
+        player.play()
 
 
 def stop_all_sounds() -> None:
-    """Stops all playing players"""
-    for obj in gc.get_objects():
-        if isinstance(obj, Player):
-            stop_sound(obj)
+    """Stops all playing players."""
+    for player in get_all_player_instances():
+        stop_sound(player)
+
+
+def get_all_player_instances() -> list[Player]:
+    """Retrieve a list of player instances."""
+    return [obj for obj in gc.get_objects() if isinstance(obj, Player)]

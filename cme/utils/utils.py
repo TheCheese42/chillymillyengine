@@ -12,6 +12,7 @@ def get_optimal_font_size(
     container_width: int,
     container_height: int,
     max_size: int = 512,
+    multiline: bool = False,
 ) -> int:
     """
     Calculates the optimal font size to fit a given text inside a container.
@@ -21,7 +22,12 @@ def get_optimal_font_size(
     min_size = 1
 
     while True:
-        label = Label(text, font_name=font_name, font_size=max_size)
+        label = Label(
+            text,
+            font_name=font_name,
+            font_size=max_size,
+            multiline=multiline,
+        )
 
         if not (
             label.content_width >= container_width or
