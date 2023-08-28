@@ -27,7 +27,7 @@ def load_sound(
     and False otherwise.
     """
     sound = arcade.load_sound(path=path, streaming=streaming)
-    sound.is_music = is_music
+    sound.is_music = is_music  # type: ignore
     return sound
 
 
@@ -49,7 +49,7 @@ def play_sound(
         looping=looping,
         speed=speed,
     )
-    player.is_music = sound.is_music if hasattr(sound, "is_music") else False
+    player.is_music = sound.is_music if hasattr(sound, "is_music") else False  # type: ignore  # noqa
 
 
 def stop_sound(player: Player) -> None:
@@ -57,13 +57,13 @@ def stop_sound(player: Player) -> None:
     arcade.stop_sound(player)
 
 
-def is_music(player_or_sound: Player | arcade.Sound):
+def is_music(player_or_sound: Player | arcade.Sound) -> bool:
     if not hasattr(player_or_sound, "is_music"):
         return False
-    return player_or_sound.is_music
+    return player_or_sound.is_music  # type: ignore
 
 
-def is_sound(player_or_sound: Player | arcade.Sound):
+def is_sound(player_or_sound: Player | arcade.Sound) -> bool:
     if not hasattr(player_or_sound, "is_music"):
         return True
     return not player_or_sound.is_music

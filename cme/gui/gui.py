@@ -3,16 +3,16 @@ Defines custom gui elements.
 """
 from __future__ import annotations
 
-from typing import Any, Iterable, Literal, Optional
+from typing import Any, Iterable, Literal, Mapping, Optional
 
 from arcade import gui, types
 from arcade.gui.nine_patch import NinePatchTexture
 from arcade.gui.style import UIStyleBase
 from arcade.gui.surface import Surface
 
-from .. import csscolor
-from ..texture import Texture, load_texture
-from ..utils import get_optimal_font_size
+from cme import csscolor
+from cme.texture import Texture
+from cme.utils import get_optimal_font_size, point_in_rect
 
 
 class UIFixedSizeLabel(gui.UILabel):
@@ -243,7 +243,7 @@ class UIToolTipButton(gui.UITextureButton):
     def __init__(
         self,
         tooltip_text: str,
-        tooltip_font_name: str | tuple = ("calibri", "arial"),
+        tooltip_font_name: str | tuple[str, ...] = ("calibri", "arial"),
         tooltip_font_size: int = 12,
         tooltip_color: tuple[int, int, int, int] = csscolor.BLACK,
         x: float = 0,
@@ -258,10 +258,7 @@ class UIToolTipButton(gui.UITextureButton):
         multiline: bool = False,
         scale: Optional[float] = None,
         style: Optional[dict[str, UIStyleBase]] = None,
-        size_hint=None,
-        size_hint_min=None,
-        size_hint_max=None,
-        **kwargs,
+        **kwargs: Mapping[Any, Any],
     ):
         """Create a button displaying a tooltip on hover.
 
@@ -296,9 +293,6 @@ class UIToolTipButton(gui.UITextureButton):
             multiline,
             scale,
             style,
-            size_hint,
-            size_hint_min,
-            size_hint_max,
             **kwargs,
         )
         self._tooltip_label = gui.UILabel(
@@ -340,17 +334,17 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         button_texture: Texture,
         button_texture_hover: Optional[Texture] = None,
         button_texture_pressed: Optional[Texture] = None,
-        font_name: str | tuple[str, str] = ("calibri", "arial"),
+        font_name: str | tuple[str, ...] = ("calibri", "arial"),
         font_size: int = 12,
         text_color: tuple[int, int, int, int] = csscolor.BLACK,
-        button_font_name: Optional[str | tuple] = None,
+        button_font_name: Optional[str | tuple[str, ...]] = None,
         button_font_size: Optional[int] = None,
         button_text_color: Optional[tuple[int, int, int, int]] = None,
         width: int = 0,
         height: int = 0,
         button_width: int = 0,
         button_height: int = 0,
-        buttons: Iterable = ("Ok",),
+        buttons: Iterable[str] = ("Ok",),
         box_border_width: int = 20,
         button_border_width: int = 5,
         scale: float = 1,
@@ -488,9 +482,112 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             "on_action", gui.UIOnActionEvent(self, event.source.text)
         )
 
-    def on_action(self, event: gui.UIOnActionEvent):
+    def on_action(self, event: gui.UIOnActionEvent) -> None:
         """
         Called when button was pressed. Access the button text using
         `event.action`.
         """
         pass
+
+
+class UIHoverOverlay(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
+    """
+    A simple message box dialog with custom texture and buttons.
+    Subscribe to `on_action` to get notified when the box is closed.
+    """
+    def __init__(
+        self,
+        text: str,
+        texture: Texture,
+        rect: types.Rect,
+        width: int = 0,
+        height: int = 0,
+        font_name: str | tuple[str, str] = ("calibri", "arial"),
+        font_size: int = 12,
+        text_color: tuple[int, int, int, int] = csscolor.BLACK,
+        texture_border_width: int = 10,
+        texture_border_height: int = 10,
+        scale: float = 1.0,
+        offset_x: int = -5,
+        offset_y: int = -5,
+    ):
+        """An overlay only showing when hovering over certain things, following
+        the mouse.
+
+        Args:
+            text (str): The text to show.
+            texture (Texture): The texture to use as background.
+            rect (Rect): The Rectangle where mouse hover triggers the overlay.
+            width (int, optional): The overlay width. If 0, the optimal width
+            is used. Defaults to 0.
+            height (int, optional): The overlay height. If 0, the optimal
+            height is used. Defaults to 0.
+            font_name (str | tuple[str, str], optional): The font to use.
+            Defaults to ("calibri", "arial").
+            font_size (int, optional): The font size to use. Defaults to 12.
+            text_color (tuple[int, int, int, int], optional): The text color to
+            use. Defaults to csscolor.BLACK.
+            texture_border_width (int, optional): The border width of the
+            background texture. Defaults to 10.
+            texture_border_height (int, optional): The border height of the
+            background texture. Defaults to 10.
+            scale (float, optional): Scaling for size and font size. Defaults
+            to 1.0.
+            offset_x (int, optional): The horizontal offset of the label
+            compared to the mouse. Defaults to -5.
+            offset_x (int, optional): The vertical offset of the label compared
+            to the mouse. Defaults to -5.
+        """
+        super().__init__()
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        self._trigger_rect = rect
+
+        # setup frame which will act like the window
+        frame = self.add(
+            gui.UIAnchorLayout(
+                width=width * scale, height=height * scale, size_hint=None
+            )
+        )
+        frame.with_padding(
+            top=texture_border_height + 10,
+            right=texture_border_width + 10,
+            bottom=texture_border_height + 10,
+            left=texture_border_width + 10,
+        )
+
+        frame.with_background(texture=NinePatchTexture(
+            top=texture_border_height,
+            right=texture_border_width,
+            bottom=texture_border_height,
+            left=texture_border_width,
+            texture=texture,
+        ))
+
+        # Setup text
+        frame.add(
+            child=gui.UILabel(
+                width=width or None,
+                height=height or None,
+                text=text,
+                font_name=font_name,
+                font_size=font_size,
+                text_color=text_color,
+                multiline=True,
+            ),
+            anchor_x="center",
+            anchor_y="center",
+        )
+
+    def on_event(self, event: gui.UIEvent) -> Optional[bool]:
+        if isinstance(event, gui.UIMouseMovementEvent):
+            if point_in_rect(int(event.x), int(event.y), self._trigger_rect):
+                self.visible = True
+                self.center = (
+                    event.x + self.width / 2 + self.offset_x,
+                    event.y + self.height / 2 + self.offset_y
+                )
+                return True
+            else:
+                self.visible = False
+        return super().on_event(event)

@@ -3,6 +3,7 @@ Provides useful utility functions.
 """
 
 
+from arcade.types import Rect
 from pyglet.text import Label
 
 
@@ -89,3 +90,9 @@ def str2bool(string: str, return_false_on_error: bool = False) -> bool:
         return False
     else:
         raise ValueError(f"The value {string} cannot be mapped to boolean.")
+
+
+def point_in_rect(x: int, y: int, rect: Rect) -> bool:
+    return (
+        rect[0] <= x <= rect[0] + rect[2] and rect[1] <= y <= rect[1] + rect[3]
+    )
