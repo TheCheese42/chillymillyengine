@@ -1,9 +1,7 @@
 """
-Provides an interface for a class to manage all settings of the game,
-optionally with multiple accounts/profiles as well as convenience functions.
-
-Register your implementation using the `register_custom_settings_class()`
-decorator.
+Provides an interface to manage game saves. For flexibility and to allow
+multiple types of saves to exist, no special load and save functionality is
+provided.
 """
 
 
@@ -14,21 +12,17 @@ import json
 from pathlib import Path
 from typing import Any, Optional
 
-from cme import logger
-
-from .paths import SETTINGS_PATH
-
-# Saves a custom Settings class provided by the user
-CUSTOM_SETTINGS_CLASS: Optional[type[Settings]] = None
+from .paths import DATA_PATH
 
 
-class Settings(metaclass=abc.ABCMeta):
+class GameSave(metaclass=abc.ABCMeta):
     """
-    Interface class for managing settings and serializing them into json files.
+    Interface class for managing game saves and serializing them into json
+    files.
 
     Subclass this and implement the unimplemented methods:
 
-    `apply()`, `update()`, `_serialize()`
+    `update()`, `_serialize()`
 
     Unimplemented classmethods:
 
@@ -54,8 +48,6 @@ class Settings(metaclass=abc.ABCMeta):
             and callable(subclass._serialize)
             and hasattr(subclass, "update")
             and callable(subclass.update)
-            and hasattr(subclass, "apply")
-            and callable(subclass.apply)
             and hasattr(subclass, "with_defaults")
             and callable(subclass.with_defaults)
             and hasattr(subclass, "save_to_file")
@@ -64,13 +56,13 @@ class Settings(metaclass=abc.ABCMeta):
         )
 
     @classmethod
-    def from_file(cls, file: str | Path) -> Settings:
+    def from_file(cls, file: str | Path) -> GameSave:
         """Instantiates the class from a json file."""
         with open(file, mode="r") as fp:
             return cls.from_json(fp.read())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Settings:
+    def from_json(cls, json_str: str) -> GameSave:
         """Instantiates the class from a json string."""
         return cls._deserialize(json.loads(json_str))
 
@@ -78,14 +70,14 @@ class Settings(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def defaults() -> dict[str, Any]:
         """
-        Returns a dictionary containing a serialized Settings object
+        Returns a dictionary containing a serialized GameSave object
         with default values.
         """
         raise NotImplementedError
 
     @classmethod
     @abc.abstractmethod
-    def _deserialize(cls, dictionary: dict[str, Any]) -> Settings:
+    def _deserialize(cls, dictionary: dict[str, Any]) -> GameSave:
         """Instantiates the class from a serialized dictionary."""
         raise NotImplementedError
 
@@ -95,17 +87,12 @@ class Settings(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def update(self, *args: Any, **kwargs: Any) -> None:
-        """Updates multiple settings at once."""
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def apply(self) -> None:
-        """Applies the settings to the game."""
+    def update(self, **kwargs: Any) -> None:
+        """Updates multiple entries at once."""
         raise NotImplementedError
 
     @classmethod
-    def with_defaults(cls) -> Settings:
+    def with_defaults(cls) -> GameSave:
         """Returns an instance of the class with default settings."""
         return cls._deserialize(cls.defaults())
 
@@ -114,35 +101,22 @@ class Settings(metaclass=abc.ABCMeta):
             json.dump(self._serialize(), fp)
 
 
-def register_custom_settings_class(cls: type[Settings]) -> type[Settings]:
-    """Decorate your custom Settings class with this."""
-    global CUSTOM_SETTINGS_CLASS
-    if CUSTOM_SETTINGS_CLASS is not None:
-        logger.warning(
-            f"Registering class {cls.__name__} as custom settings class "
-            f"although {CUSTOM_SETTINGS_CLASS.__name__} already has been."
-        )
-    CUSTOM_SETTINGS_CLASS = cls
-    return cls
-
-
-def load_settings(profile: Optional[str] = None) -> Settings:
+def load_game_save(
+    game_save_class: type[GameSave],
+    profile: Optional[str] = None,
+) -> GameSave:
     """
-    Load Settings object from standard directory.
+    Load GameSave object from standard directory.
     Optionally takes a profile name to support multiple accounts/profiles.
     """
-    if CUSTOM_SETTINGS_CLASS is None:
-        raise RuntimeError(
-            "Couldn't find a registered implementation of the Settings class."
-        )
-    filename = "settings.json" if not profile else f"settings_{profile}.json"
-    return CUSTOM_SETTINGS_CLASS.from_file(SETTINGS_PATH / filename)
+    filename = "gamesave.json" if not profile else f"gamesave_{profile}.json"
+    return game_save_class.from_file(DATA_PATH / "saves" / filename)
 
 
-def save_settings(settings: Settings, profile: Optional[str] = None) -> None:
+def save_game_save(game_save: GameSave, profile: Optional[str] = None) -> None:
     """
-    Save the given Settings object.
+    Save the given GameSave object to the standard directory.
     Optionally takes a profile name to suppport multiple accounts/profiles.
     """
-    filename = "settings.json" if not profile else f"settings_{profile}.json"
-    settings.save_to_file(SETTINGS_PATH / filename)
+    filename = "gamesave.json" if not profile else f"gamesave_{profile}.json"
+    game_save.save_to_file(DATA_PATH / "saves" / filename)

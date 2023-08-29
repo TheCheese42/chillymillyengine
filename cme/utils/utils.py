@@ -3,6 +3,8 @@ Provides useful utility functions.
 """
 
 
+from typing import Any
+
 from arcade.types import Rect
 from pyglet.text import Label
 
@@ -96,3 +98,8 @@ def point_in_rect(x: int, y: int, rect: Rect) -> bool:
     return (
         rect[0] <= x <= rect[0] + rect[2] and rect[1] <= y <= rect[1] + rect[3]
     )
+
+
+def missing_keys(dict1: dict[Any, Any], dict2: dict[Any, Any]) -> list[Any]:
+    missing_keys_list = [key for key in dict1 if key not in dict2]
+    return missing_keys_list

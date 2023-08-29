@@ -9,8 +9,9 @@ from arcade import gui, types
 from arcade.gui.nine_patch import NinePatchTexture
 from arcade.gui.style import UIStyleBase
 from arcade.gui.surface import Surface
+from arcade.math import get_distance
 
-from cme import csscolor
+from cme import csscolor, shapes
 from cme.texture import Texture
 from cme.utils import get_optimal_font_size, point_in_rect
 
@@ -591,3 +592,199 @@ class UIHoverOverlay(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             else:
                 self.visible = False
         return super().on_event(event)
+
+
+class UIFineColoredSlider(gui.UIWidget):
+    """
+    Horizontal slider where every square can have it's own color.
+    It's borderless so the height will be the height of the middle cursor,
+    while the content will take half of this size.
+    """
+    value = gui.Property(0)
+    hovered = gui.Property(False)
+    pressed = gui.Property(False)
+    disabled = gui.Property(False)
+
+    def __init__(
+        self,
+        *,
+        value: float = 0,
+        min_value: float = 0,
+        max_value: float = 255,
+        x: float = 0,
+        y: float = 0,
+        width: float = 300,
+        height: float = 20,
+        colors: Optional[list[types.RGBA255]] = None,
+        cursor_color: types.RGBA255 = csscolor.BLACK,
+        cursor_outline_color: types.RGBA255 = csscolor.BLACK,
+    ):
+        if height // 2 % width:
+            raise ValueError("height//2 should be a multiple of width")
+
+        super().__init__(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+        )
+
+        self.value = value
+        self.vmin = min_value
+        self.vmax = max_value
+
+        self.cursor_radius = self.height
+        self.slider_height = self.height // 2
+        self.color_square_size = self.slider_height
+        self.color_square_amount = self.width / self.color_square_size
+        if colors is None:
+            colors = [(0, 0, 0, 0) for _ in range(self.color_square_amount)]
+        elif len(colors) != self.color_square_amount:
+            raise ValueError(
+                f"colors should be of length {self.color_square_amount}, got "
+                f"{len(colors)}"
+            )
+        self.colors = colors
+
+        self.cursor_color = cursor_color
+        self.cursor_outline_color = cursor_outline_color
+
+        # trigger render on value changes
+        gui.bind(self, "value", self.trigger_full_render)
+        gui.bind(self, "hovered", self.trigger_render)
+        gui.bind(self, "pressed", self.trigger_render)
+        gui.bind(self, "disabled", self.trigger_render)
+
+        self.register_event_type("on_change")
+
+    def get_current_state(self) -> str:
+        """
+        Returns the current state of the slider i.e disabled, press, hover
+        or normal.
+        """
+        if self.disabled:
+            return "disabled"
+        elif self.pressed:
+            return "press"
+        elif self.hovered:
+            return "hover"
+        else:
+            return "normal"
+
+    def _x_for_value(self, value: float) -> float:
+        x = self.rect.x
+        nval = (value - self.vmin) / self.vmax
+        return (  # type: ignore
+            x
+            + self.cursor_radius
+            + nval * (self.width - 2 * self.cursor_radius)
+        )
+
+    @property
+    def norm_value(self) -> float:
+        """Normalized value between 0.0 and 1.0"""
+        return (self.value - self.vmin) / self.vmax
+
+    @norm_value.setter
+    def norm_value(self, value: float) -> None:
+        self.value = min(
+            value * (self.vmax - self.vmin) + self.vmin, self.vmax
+        )
+
+    @property
+    def value_x(self) -> float:
+        """Returns the current value of the cursor of the slider."""
+        return self._x_for_value(self.value)
+
+    @value_x.setter
+    def value_x(self, nx: float) -> None:
+        cr = self.rect
+
+        x = min(
+            cr.right - self.cursor_radius, max(nx, cr.x + self.cursor_radius)
+        )
+        if self.width == 0:
+            self.norm_value = 0
+        else:
+            self.norm_value = (x - cr.x - self.cursor_radius) / float(
+                self.width - 2 * self.cursor_radius
+            )
+
+    def do_render(self, surface: Surface) -> None:
+        self.prepare_render(surface)  # type: ignore
+
+        slider_height = self.slider_height
+        cursor_radius = self.cursor_radius
+
+        slider_left_x = self._x_for_value(self.vmin)
+        slider_right_x = self._x_for_value(self.vmax)
+        cursor_center_x = self.value_x
+
+        slider_center_y = self.height // 2
+        slider_buttom_y = slider_center_y + (slider_height // 2)
+
+        x = slider_left_x
+        for color in self.colors:
+            shapes.draw_xywh_rectangle_filled(
+                slider_left_x,
+                slider_buttom_y,
+                width=self.color_square_size,
+                height=self.color_square_size,
+                color=color,
+            )
+
+        # cursor
+        cursor_color = self.cursor_color
+        cursor_outline_color = self.cursor_outline_color
+
+        rel_cursor_x = cursor_center_x - self.rect.x
+        shapes.draw_circle_filled(
+            rel_cursor_x, slider_center_y, cursor_radius, cursor_color
+        )
+        shapes.draw_circle_filled(
+            rel_cursor_x,
+            slider_center_y,
+            cursor_radius // 4,
+            cursor_outline_color,
+        )
+
+    def _cursor_pos(self) -> tuple[float, float]:
+        return self.value_x, int(self.y + self.height // 2)
+
+    def _is_on_cursor(self, x: float, y: float) -> bool:
+        cursor_center_x, cursor_center_y = self._cursor_pos()
+        cursor_radius = self.cursor_radius
+        distance_to_cursor = get_distance(
+            x, y, cursor_center_x, cursor_center_y
+        )
+        return distance_to_cursor <= cursor_radius  # type: ignore
+
+    def on_event(self, event: gui.UIEvent) -> Optional[bool]:
+        if isinstance(event, gui.UIMouseMovementEvent):
+            self.hovered = self._is_on_cursor(event.x, event.y)
+
+        if isinstance(event, gui.UIMouseDragEvent):
+            if self.pressed:
+                old_value = self.value
+                self.value_x = event.x
+                self.dispatch_event(
+                    "on_change", gui.UIOnChangeEvent(
+                        self, old_value, self.value
+                    )
+                )
+
+        if isinstance(event, gui.UIMousePressEvent):
+            if self._is_on_cursor(event.x, event.y):
+                self.pressed = True
+
+        if isinstance(event, gui.UIMouseReleaseEvent):
+            self.pressed = False
+
+        return False
+
+    def on_change(self, event: gui.UIOnChangeEvent) -> None:
+        """
+        To be implemented by the user, triggered when the cursor's value is
+        changed.
+        """
+        pass

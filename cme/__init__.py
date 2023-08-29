@@ -25,6 +25,7 @@ __all__ = [
     "color",
     "csscolor",
     "exit",
+    "get_display_size",
     "get_window",
     "gl",
     "key",
