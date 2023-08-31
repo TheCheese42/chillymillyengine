@@ -11,7 +11,7 @@ from arcade.gui.style import UIStyleBase
 from arcade.gui.surface import Surface
 from arcade.math import get_distance
 
-from cme import csscolor, shapes
+from cme import csscolor, key, shapes
 from cme.texture import Texture
 from cme.utils import get_optimal_font_size, point_in_rect
 
@@ -788,3 +788,211 @@ class UIFineColoredSlider(gui.UIWidget):
         changed.
         """
         pass
+
+
+class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
+    """
+    Popup dialog asking the user to select a keybind.
+    """
+    def __init__(
+        self,
+        text: str,
+        default_keybind: int,
+        menu_texture: Texture,
+        button_texture: Texture,
+        button_texture_hover: Optional[Texture] = None,
+        button_texture_pressed: Optional[Texture] = None,
+        font_name: str | tuple[str, ...] = ("calibri", "arial"),
+        font_size: int = 12,
+        text_color: tuple[int, int, int, int] = csscolor.BLACK,
+        button_font_name: Optional[str | tuple[str, ...]] = None,
+        button_font_size: Optional[int] = None,
+        button_text_color: Optional[tuple[int, int, int, int]] = None,
+        width: int = 300,
+        height: int = 200,
+        button_width: int = 0,
+        button_height: int = 0,
+        buttons: tuple[str, str] = ("Cancel", "Confirm"),
+        box_border_width: int = 10,
+        button_border_width: int = 5,
+        scale: float = 1,
+    ):
+        """
+        Args:
+            text (str): A message to show the user.
+            default_keybind (int): The pre-selected keybind-
+            menu_texture (Texture): The menu texture to use for the whole
+            popup.
+            button_texture (Texture): The button Texture for apply and cancel.
+            button_texture_hover (Optional[Texture], optional): The button
+            texture for hover. Defaults to None.
+            button_texture_pressed (Optional[Texture], optional): The button
+            texture for press. Defaults to None.
+            font_name (str | tuple[str, ...], optional): The font name to use
+            for the message. Defaults to ("calibri", "arial").
+            font_size (int, optional): The font size to use for the message.
+            Defaults to 12.
+            text_color (tuple[int, int, int, int], optional): The text color to
+            use for the message. Defaults to csscolor.BLACK.
+            button_font_name (Optional[str  |  tuple[str, ...]], optional): The
+            font name to use for the button text. Defaults to None.
+            button_font_size (Optional[int], optional): The font size to use
+            for the button text. Defaults to None.
+            button_text_color (Optional[tuple[int, int, int, int]], optional):
+            The text color to use for the button text. Defaults to None.
+            width (int, optional): The width of the whole popup. Defaults to
+            300.
+            height (int, optional): The height of the whole popup. Defaults to
+            200.
+            button_width (int, optional): The width of one button. Defaults to
+            the texture width.
+            button_height (int, optional): The height of one button. Defaults
+            to the texture width.
+            buttons (tuple[str, str], optional): A tuple of button texts.
+            Usable for localization, first  one is cancel and second confirm.
+            Defaults to ("Cancel", "Confirm").
+            box_border_width (int, optional): The width of the popup's border.
+            Defaults to 10.
+            button_border_width (int, optional): The width of the button's
+            border. Defaults to 5.
+            scale (float, optional): Scale for everything. Defaults to 1.
+
+        Raises:
+            ValueError: Buttons parameter has a length different from 2.
+        """
+        if len(buttons) != 2:
+            raise ValueError(
+                "`buttons` should be of length 2"
+            )
+
+        super().__init__()
+        self.selected_keybind = default_keybind
+        self.register_event_type("on_action")
+
+        if not button_texture_hover:
+            button_texture_hover = button_texture
+        if not button_texture_pressed:
+            button_texture_pressed = button_texture
+        if not width:
+            width = menu_texture.width
+        if not height:
+            height = menu_texture.height
+        if not button_font_name:
+            button_font_name = font_name
+        if not button_font_size:
+            button_font_size = font_size
+        if not button_text_color:
+            button_text_color = text_color
+        if not button_width:
+            button_width = button_texture.width
+        if not button_height:
+            button_height = button_texture.height
+
+        for texture in (
+            button_texture,
+            button_texture_hover,
+            button_texture_pressed
+        ):
+            texture.width = button_width
+            texture.height = button_height
+
+        # setup frame which will act like the window
+        frame = self.add(
+            gui.UIAnchorLayout(
+                width=width * scale, height=height * scale, size_hint=None
+            )
+        )
+        frame.with_padding(
+            top=box_border_width + 10,
+            right=box_border_width + 10,
+            bottom=box_border_width + 10,
+            left=box_border_width + 10,
+        )
+
+        frame.with_background(texture=NinePatchTexture(
+            left=box_border_width,
+            right=box_border_width,
+            bottom=box_border_width,
+            top=box_border_width,
+            texture=menu_texture,
+        ))
+
+        # Setup text
+        frame.add(
+            child=gui.UITextArea(
+                text=text,
+                width=width * scale - box_border_width,
+                height=height * scale - box_border_width,
+                font_name=font_name,
+                font_size=font_size,
+                text_color=text_color,
+            ),
+            anchor_x="center",
+            anchor_y="top",
+        )
+
+        # Setup keybind area
+        self.keybind_label = gui.UILabel(
+            text=key.reverse_lookup[self.selected_keybind],
+            font_name=font_name,
+            font_size=font_size * 1.5,
+            text_color=text_color,
+        )
+        frame.add(self.keybind_label, anchor_x="center", anchor_y="center")
+
+        # setup buttons
+        button_group = gui.UIBoxLayout(vertical=False, space_between=10)
+        button_style = gui.UITextureButtonStyle(
+            font_size=button_font_size,
+            font_name=button_font_name,
+            font_color=button_text_color,
+            border_width=button_border_width,
+        )
+        for button_text in buttons:
+            button = gui.UITextureButton(
+                texture=button_texture,
+                texture_hovered=button_texture_hover,
+                texture_pressed=button_texture_pressed,
+                text=button_text,
+                scale=scale,
+                style={
+                    "normal": button_style,
+                    "hover": button_style,
+                    "press": button_style,
+                    "disabled": button_style,
+                }
+            )
+            button_group.add(button)
+            button.on_click = self._on_choice  # type: ignore
+            # Returns 1 if idx 1 else 0
+            button.is_confirm = bool(buttons.index(button))
+
+        frame.add(
+            child=button_group,
+            anchor_x="center",
+            anchor_y="bottom",
+        )
+
+    def _on_choice(self, event: gui.UIOnClickEvent) -> None:
+        if self.parent:
+            self.parent.remove(self)
+        self.dispatch_event(
+            "on_action", gui.UIOnActionEvent(
+                self,
+                self.selected_keybind if event.source.is_confirm else "cancel"
+            )
+        )
+
+    def on_event(self, event: gui.UIEvent) -> Optional[bool]:
+        if isinstance(event, gui.UIKeyPressEvent):
+            key_ = event.symbol
+            self.selected_keybind = key_
+            self.keybind_label.text = key.reverse_lookup[key_]
+            return True
+        return super().on_event(event)
+
+    def on_action(self, event: gui.UIOnActionEvent) -> None:
+        """
+        Called when button was pressed. Access the button text using
+        `event.action`.
+        """

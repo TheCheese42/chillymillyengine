@@ -3,8 +3,10 @@ Provides useful utility functions.
 """
 
 
-from typing import Any
+from collections import defaultdict
+from typing import Any, Optional
 
+import numpy as np
 from arcade.types import Rect
 from pyglet.text import Label
 
@@ -103,3 +105,64 @@ def point_in_rect(x: int, y: int, rect: Rect) -> bool:
 def missing_keys(dict1: dict[Any, Any], dict2: dict[Any, Any]) -> list[Any]:
     missing_keys_list = [key for key in dict1 if key not in dict2]
     return missing_keys_list
+
+
+def shrink_list_simple(
+    input_list: list[Any], output_size: int
+) -> list[Any]:
+    """
+    Reduce a list to a fixed size.
+    **THIS ONLY WORKS WHEN len(input_list) % output_size == 0!!!**
+    """
+    input_list_len = len(input_list)
+    every_x_element = input_list_len / output_size
+    new_list = []
+    x: Optional[int] = None
+    for idx, element in enumerate(input_list):
+        if x is None:
+            x = idx
+            new_list.append(element)
+            continue
+        if idx - x >= every_x_element:
+            new_list.append(element)
+            x = idx
+    return new_list
+
+
+def even_distributed_downsample(
+    original_list: list[Any],
+    new_length: int,
+    preserve_order: bool = False,
+) -> list[Any]:
+    """Reduce a list to a fixed sice while keeping distribution.
+
+    Args:
+        original_list (list[Any]): The list to be shortened.
+        new_length (int): The fixed length of the output.
+        preserve_order (bool, optional): Wether or not the original order
+        should be preserved. If True, no duplicates are allowed. Defaults to
+        False.
+
+    Returns:
+        list[Any]: The reduced list.
+    """
+    proportions: defaultdict[Any, Any] = defaultdict(int)
+    for item in original_list:
+        proportions[item] += 1
+
+    categories = list(proportions.keys())
+    category_weights = np.array([proportions[cat] for cat in categories])
+    category_probs = category_weights / sum(category_weights)
+
+    sampled_indices = np.random.choice(
+        len(categories), new_length, p=category_probs)
+
+    new_list = [categories[index] for index in sampled_indices]
+    if preserve_order:
+        idx_to_element: dict[int, Any] = {}
+        for i in new_list:
+            idx = original_list.index(i)
+            idx_to_element[idx] = i
+        idx_to_element = dict(sorted(idx_to_element.items()))
+        new_list = list(idx_to_element.values())
+    return new_list
