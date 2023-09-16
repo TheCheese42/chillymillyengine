@@ -24,10 +24,10 @@ class LangDict(dict):  # type: ignore
             value = str(super().__getitem__(key))
         except KeyError:
             if self.langcode == DEFAULT_LANGUAGE:
-                raise KeyError(f"Language string {key} does not exist.")
+                raise KeyError(f"Language string `{key}` does not exist.")
             logger.warning(
-                f"Language string for {key} does not exist in "
-                f"{self.langcode} language."
+                f"Language string for `{key}` does not exist in "
+                f"`{self.langcode}` language."
             )
             value = self.get_from_default(key)
         return value

@@ -1147,7 +1147,7 @@ def get_rgb_for_hue_saturation(
     return tuple(int(val * 255) for val in rgb) + (255,)  # type: ignore
 
 
-def get_rgb_for_hue_saturation_value(
+def get_rgb_for_hsv(
     hue: float, saturation: float, value: float
 ) -> tuple[int, int, int, int]:
     """
@@ -1183,3 +1183,31 @@ def get_rgb_for_hue_value(
     """
     rgb = colorsys.hsv_to_rgb(hue, 1.0, value)
     return tuple(int(val * 255) for val in rgb) + (255,)  # type: ignore
+
+
+def get_hsv_for_rgb(
+    red: int,
+    green: int,
+    blue: int,
+    alpha: int = 0,
+) -> tuple[float, float, float]:
+    """
+    _summary_
+
+    :param red: Red value, from 0 to 255.
+    :type red: int
+    :param green: Green value, from 0 to 255.
+    :type green: int
+    :param blue: Blue value, from 0 to 255.
+    :type blue: int
+    :param alpha: Alpha value for RGBA compatibility. Unused, HSV doesn't
+    support transparency. Defaults to 0.
+    :type alpha: int
+    :return: HSV Tuple
+    :rtype: tuple[int, int, int]
+    """
+    return colorsys.rgb_to_hsv(
+        r=red / 255,
+        g=green / 255,
+        b=blue / 255,
+    )

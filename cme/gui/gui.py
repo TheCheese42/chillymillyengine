@@ -341,8 +341,9 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         button_font_name: Optional[str | tuple[str, ...]] = None,
         button_font_size: Optional[int] = None,
         button_text_color: Optional[tuple[int, int, int, int]] = None,
-        width: int = 0,
-        height: int = 0,
+        width: int = 300,
+        height: int = 200,
+        fit: bool = True,
         button_width: int = 0,
         button_height: int = 0,
         buttons: Iterable[str] = ("Ok",),
@@ -371,6 +372,8 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             take the texture size. Defaults to 0.
             buttons (Iterable, optional): An Iterable of buttons. Defaults to
             ("Ok",).
+            fit (bool, optional): If True, adapt size to text size. Defaults to
+            True.
 
         Raises:
             ValueError: Requires at least one button to be set.
@@ -413,7 +416,9 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         # setup frame which will act like the window
         frame = self.add(
             gui.UIAnchorLayout(
-                width=width * scale, height=height * scale, size_hint=None
+                width=width * scale,
+                height=height * scale,
+                size_hint=None,
             )
         )
         frame.with_padding(
@@ -432,15 +437,17 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         ))
 
         # Setup text
+        text_area = gui.UITextArea(
+            text=text,
+            width=width * scale - box_border_width,
+            height=height * scale - box_border_width,
+            font_name=font_name,
+            font_size=font_size,
+            text_color=text_color,
+        )
+
         frame.add(
-            child=gui.UITextArea(
-                text=text,
-                width=width * scale - box_border_width,
-                height=height * scale - box_border_width,
-                font_name=font_name,
-                font_size=font_size,
-                text_color=text_color,
-            ),
+            text_area,
             anchor_x="center",
             anchor_y="top",
         )
@@ -455,6 +462,8 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         )
         for button_text in buttons:
             button = gui.UITextureButton(
+                width=button_width,
+                height=button_height,
                 texture=button_texture,
                 texture_hovered=button_texture_hover,
                 texture_pressed=button_texture_pressed,
@@ -475,6 +484,16 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             anchor_x="right",
             anchor_y="bottom",
         )
+
+        if fit:
+            text_area.fit_content()
+            text_height = text_area.height
+            button_height = button_height
+            between = 10
+            full_padding = frame.height - frame.content_height
+            frame.resize(
+                height=text_height + button_height + between + full_padding
+            )
 
     def _on_choice(self, event: gui.UIOnClickEvent) -> None:
         if self.parent:
@@ -619,8 +638,8 @@ class UIFineColoredSlider(gui.UIWidget):
         cursor_color: types.RGBA255 = csscolor.BLACK,
         cursor_outline_color: types.RGBA255 = csscolor.BLACK,
     ):
-        if height // 2 % width:
-            raise ValueError("height//2 should be a multiple of width")
+        if width % (height // 2):
+            raise ValueError("width should be a multiple of height//2")
 
         super().__init__(
             x=x,
@@ -636,7 +655,7 @@ class UIFineColoredSlider(gui.UIWidget):
         self.cursor_radius = self.height
         self.slider_height = self.height // 2
         self.color_square_size = self.slider_height
-        self.color_square_amount = self.width / self.color_square_size
+        self.color_square_amount = self.width // self.color_square_size
         if colors is None:
             colors = [(0, 0, 0, 0) for _ in range(self.color_square_amount)]
         elif len(colors) != self.color_square_amount:
@@ -680,6 +699,10 @@ class UIFineColoredSlider(gui.UIWidget):
             + nval * (self.width - 2 * self.cursor_radius)
         )
 
+    def get_current_color(self) -> types.RGBA255:
+        idx = round(self.norm_value * len(self.colors))
+        return self.colors[idx - 1]
+
     @property
     def norm_value(self) -> float:
         """Normalized value between 0.0 and 1.0"""
@@ -716,22 +739,22 @@ class UIFineColoredSlider(gui.UIWidget):
         slider_height = self.slider_height
         cursor_radius = self.cursor_radius
 
-        slider_left_x = self._x_for_value(self.vmin)
-        slider_right_x = self._x_for_value(self.vmax)
+        slider_left = self._x_for_value(self.vmin)
         cursor_center_x = self.value_x
 
-        slider_center_y = self.height // 2
-        slider_buttom_y = slider_center_y + (slider_height // 2)
+        slider_center_y = self.content_height // 2
+        slider_bottom = slider_center_y + (slider_height // 2)
 
-        x = slider_left_x
+        x = slider_left
         for color in self.colors:
             shapes.draw_xywh_rectangle_filled(
-                slider_left_x,
-                slider_buttom_y,
+                x - self.content_rect.x,
+                slider_bottom - self.color_square_size,
                 width=self.color_square_size,
                 height=self.color_square_size,
                 color=color,
             )
+            x += self.color_square_size
 
         # cursor
         cursor_color = self.cursor_color
@@ -965,7 +988,7 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             button_group.add(button)
             button.on_click = self._on_choice  # type: ignore
             # Returns 1 if idx 1 else 0
-            button.is_confirm = bool(buttons.index(button))
+            button.is_confirm = bool(buttons.index(button.text))
 
         frame.add(
             child=button_group,
@@ -988,6 +1011,7 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             key_ = event.symbol
             self.selected_keybind = key_
             self.keybind_label.text = key.reverse_lookup[key_]
+            self.keybind_label.fit_content()
             return True
         return super().on_event(event)
 

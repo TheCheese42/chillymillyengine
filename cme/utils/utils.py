@@ -6,7 +6,6 @@ Provides useful utility functions.
 from collections import defaultdict
 from typing import Any, Optional
 
-import numpy as np
 from arcade.types import Rect
 from pyglet.text import Label
 
@@ -146,6 +145,12 @@ def even_distributed_downsample(
     Returns:
         list[Any]: The reduced list.
     """
+    try:
+        import numpy as np  # type: ignore
+    except ImportError:
+        raise ImportError(
+            "numpy must be installed for this to work"
+        )
     proportions: defaultdict[Any, Any] = defaultdict(int)
     for item in original_list:
         proportions[item] += 1
