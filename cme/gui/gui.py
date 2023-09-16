@@ -486,12 +486,12 @@ class UITextureMessageBox(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         )
 
         if fit:
-            text_area.fit_content()
+            text_area.fit_content()  # type: ignore
             text_height = text_area.height
             button_height = button_height
             between = 10
             full_padding = frame.height - frame.content_height
-            frame.resize(
+            frame.resize(  # type: ignore
                 height=text_height + button_height + between + full_padding
             )
 
@@ -1011,7 +1011,7 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
             key_ = event.symbol
             self.selected_keybind = key_
             self.keybind_label.text = key.reverse_lookup[key_]
-            self.keybind_label.fit_content()
+            self.keybind_label.fit_content()  # type: ignore
             return True
         return super().on_event(event)
 
