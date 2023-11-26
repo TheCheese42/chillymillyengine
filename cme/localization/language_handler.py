@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 try:
-    import tomlib  # type: ignore
+    import tomllib  # type: ignore
 except ImportError:
-    import tomli as tomlib
+    import tomli as tomllib
 
 from pathlib import Path
 
@@ -42,8 +42,8 @@ class LangDict(dict):  # type: ignore
     @classmethod
     def from_toml(cls, toml_str: str) -> "LangDict":
         """Create a LangDict instance from a toml string."""
-        dict_ = tomlib.loads(toml_str)
-        obj = cls(tomlib.loads(toml_str)["strings"])
+        dict_ = tomllib.loads(toml_str)
+        obj = cls(tomllib.loads(toml_str)["strings"])
         for key, value in dict_["meta"].items():
             setattr(obj, key, value)
         return obj

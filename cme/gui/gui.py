@@ -10,7 +10,6 @@ from arcade.gui.nine_patch import NinePatchTexture
 from arcade.gui.style import UIStyleBase
 from arcade.gui.surface import Surface
 from arcade.math import get_distance
-
 from cme import csscolor, key, shapes
 from cme.texture import Texture
 from cme.utils import get_optimal_font_size, point_in_rect
@@ -842,7 +841,7 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
     ):
         """
         Args:
-            text (str): A message to show the user.
+            text (str): A message to show to the user.
             default_keybind (int): The pre-selected keybind-
             menu_texture (Texture): The menu texture to use for the whole
             popup.
@@ -890,6 +889,7 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
 
         super().__init__()
         self.selected_keybind = default_keybind
+        self.org_keybind = default_keybind
         self.register_event_type("on_action")
 
         if not button_texture_hover:
@@ -1020,3 +1020,33 @@ class UIKeybindPicker(gui.UIMouseFilterMixin, gui.UIAnchorLayout):
         Called when button was pressed. Access the button text using
         `event.action`.
         """
+
+
+class UIEmptySpace(gui.UIWidget):
+    """
+    Widget reserving space, can also have a background color.
+
+    :param x: x coordinate of bottom left
+    :param y: y coordinate of bottom left
+    :param width: width of widget
+    :param height: height of widget
+    """
+
+    def __init__(
+        self,
+        x=0,
+        y=0,
+        width=100,
+        height=100,
+    ):
+        super().__init__(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+        )
+
+    def do_render(self, surface: Surface):
+        self.prepare_render(surface)
+        surface.clear()
+
