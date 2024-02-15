@@ -120,6 +120,7 @@ def save_game_save(game_save: GameSave, profile: Optional[str] = None) -> None:
     Optionally takes a profile name to suppport multiple accounts/profiles.
     """
     filename = "gamesave.json" if not profile else f"gamesave_{profile}.json"
+    (DATA_PATH / "saves").mkdir(exist_ok=True)
     game_save.save_to_file(DATA_PATH / "saves" / filename)
 
 
