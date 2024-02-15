@@ -162,7 +162,7 @@ class PickleGameSave(metaclass=abc.ABCMeta):
     @classmethod
     def from_file(cls, file: str | Path) -> PickleGameSave:
         """Instantiates the class from a pickle file."""
-        with open(file, mode="r") as fp:
+        with open(file, mode="rb") as fp:
             return cls.from_pickle(fp.read())
 
     @classmethod
@@ -191,7 +191,7 @@ class PickleGameSave(metaclass=abc.ABCMeta):
         return cls(**defaults)
 
     def save_to_file(self, file: str | Path) -> None:
-        with open(file, "w") as fp:
+        with open(file, "wb") as fp:
             pickle.dump(self, fp)
 
 
