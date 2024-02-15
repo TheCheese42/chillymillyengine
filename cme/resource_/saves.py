@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import abc
 import json
+import pickle
 from pathlib import Path
 from typing import Any, Optional
 
@@ -119,4 +120,100 @@ def save_game_save(game_save: GameSave, profile: Optional[str] = None) -> None:
     Optionally takes a profile name to suppport multiple accounts/profiles.
     """
     filename = "gamesave.json" if not profile else f"gamesave_{profile}.json"
+    game_save.save_to_file(DATA_PATH / "saves" / filename)
+
+
+class PickleGameSave(metaclass=abc.ABCMeta):
+    """
+    Interface class for managing game saves and serializing them using pickle.
+
+    Subclass this and implement the unimplemented methods:
+
+    `update()`
+
+    Unimplemented staticmethods:
+
+    `defaults()`
+    """
+
+    @classmethod
+    def __subclasshook__(cls, subclass: Any) -> Any:
+        return (
+            hasattr(subclass, "from_file")
+            and callable(subclass.from_file)
+            and hasattr(subclass, "from_pickle")
+            and callable(subclass.from_pickle)
+            and hasattr(subclass, "defaults")
+            and callable(subclass.defaults)
+            and hasattr(subclass, "_deserialize")
+            and callable(subclass._deserialize)
+            and hasattr(subclass, "_serialize")
+            and callable(subclass._serialize)
+            and hasattr(subclass, "update")
+            and callable(subclass.update)
+            and hasattr(subclass, "with_defaults")
+            and callable(subclass.with_defaults)
+            and hasattr(subclass, "save_to_file")
+            and callable(subclass.save_to_file)
+            or NotImplemented
+        )
+
+    @classmethod
+    def from_file(cls, file: str | Path) -> PickleGameSave:
+        """Instantiates the class from a pickle file."""
+        with open(file, mode="r") as fp:
+            return cls.from_pickle(fp.read())
+
+    @classmethod
+    def from_pickle(cls, pickle_str: str) -> PickleGameSave:
+        """Instantiates the class from a pickle string."""
+        return pickle.loads(pickle_str)
+
+    @staticmethod
+    @abc.abstractmethod
+    def defaults() -> dict[str, Any]:
+        """
+        Returns a dictionary containing a serialized PickleGameSave object
+        with default values.
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def update(self, **kwargs: Any) -> None:
+        """Updates multiple entries at once."""
+        raise NotImplementedError
+
+    @classmethod
+    def with_defaults(cls) -> PickleGameSave:
+        """Returns an instance of the class with default settings."""
+        defaults = cls.defaults()
+        return cls(**defaults)
+
+    def save_to_file(self, file: str | Path) -> None:
+        with open(file, "w") as fp:
+            pickle.dump(self, fp)
+
+
+def load_pickle_game_save(
+    game_save_class: type[PickleGameSave],
+    profile: Optional[str] = None,
+) -> PickleGameSave:
+    """
+    Load PickleGameSave object from standard directory.
+    Optionally takes a profile name to support multiple accounts/profiles.
+    """
+    filename = "gamesave.pkl" if not profile else f"gamesave_{profile}.pkl"
+    return game_save_class.from_file(DATA_PATH / "saves" / filename)
+
+
+def save_pickle_game_save(
+    game_save: PickleGameSave,
+    profile: Optional[str] = None
+) -> None:
+    """
+    Save the given PickleGameSave object to the standard directory.
+    Optionally takes a profile name to support multiple accounts/profiles.
+    """
+    filename = "gamesave.pkl" if not profile else f"gamesave_{profile}.pkl"
+    (DATA_PATH / "saves").mkdir(exist_ok=True)
     game_save.save_to_file(DATA_PATH / "saves" / filename)

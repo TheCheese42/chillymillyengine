@@ -1048,5 +1048,3 @@ class UIEmptySpace(gui.UIWidget):
 
     def do_render(self, surface: Surface):
         self.prepare_render(surface)
-        surface.clear()
-
