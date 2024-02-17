@@ -2,10 +2,10 @@
 Holds all enumerations.
 """
 
-from enum import Enum
+from enum import IntEnum
 
 
-class Facing(Enum):
+class Facing(IntEnum):
     """
     Holds enums for common facing directories.
     Subclass to add your own.

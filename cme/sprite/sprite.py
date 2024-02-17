@@ -30,54 +30,31 @@ class AnimatedSprite(arcade.Sprite):
 
     def __init__(
         self,
-        filename: Optional[str] = None,
+        path_or_texture: Optional[str | arcade.Texture] = None,
         scale: float = 1,
-        image_x: float = 0,
-        image_y: float = 0,
-        image_width: float = 0,
-        image_height: float = 0,
         center_x: float = 0,
         center_y: float = 0,
-        repeat_count_x: int = 1,  # Unused
-        repeat_count_y: int = 1,  # Unused
-        flipped_horizontally: bool = False,
-        flipped_vertically: bool = False,
-        flipped_diagonally: bool = False,
-        hit_box_algorithm: Optional[str] = "Simple",
-        hit_box_detail: float = 4.5,
-        texture: Optional[arcade.Texture] = None,
         angle: float = 0,
     ) -> None:
         """
         `arcade.Sprite` constructor.
 
         Add textures afterwards with `texture_*` methods.
-        `texture` parameter will be used as default.
+        `path_or_texture` parameter will be used as default.
         """
-
         super().__init__(
-            filename=filename,
+            path_or_texture=path_or_texture,
             scale=scale,
-            image_x=image_x,
-            image_y=image_y,
-            image_width=image_width,
-            image_height=image_height,
             center_x=center_x,
             center_y=center_y,
-            repeat_count_x=repeat_count_x,
-            repeat_count_y=repeat_count_y,
-            flipped_horizontally=flipped_horizontally,
-            flipped_vertically=flipped_vertically,
-            flipped_diagonally=flipped_diagonally,
-            hit_box_algorithm=hit_box_algorithm,
-            hit_box_detail=hit_box_detail,
-            texture=texture,
             angle=angle,
         )
 
+        self.initial_texture_set = bool(path_or_texture)
+
         self.all_textures: dict[
             str, list[tuple[arcade.Texture, ...]]
-        ]
+        ] = {}
 
         self._state: Optional[str] = None
 
@@ -114,11 +91,11 @@ class AnimatedSprite(arcade.Sprite):
     def animation_speed(self, value: int) -> None:
         self._animation_speed = value
 
-    def update_animation(self, delta_time: float = 1 / 60) -> None:
+    def update_animation(self) -> None:
         """
         Updates the current texture by taking the next texture of the current
         state.
-        This will update based on the delta_time parameter.
+        This will update based on the specified `animation_speed` attribute.
         """
 
         if not self.state:
@@ -142,8 +119,8 @@ class AnimatedSprite(arcade.Sprite):
                 ]
             try:
                 self.texture = differently_faced_textures[
-                    self.facing  # type: ignore
-                ]                # (enum as index)
+                    self.facing
+                ]
             except IndexError:
                 self.texture = differently_faced_textures[0]
                 logger.error(
@@ -163,6 +140,10 @@ class AnimatedSprite(arcade.Sprite):
         If given a tuple of Textures, multiple facing directories are stored
         and can later be accessed using the Facing enum from the enums module.
         """
+        # Prevent weird Texture before first animation tick
+        if not self.initial_texture_set:
+            self.texture = texture
+            self.initial_texture_set = True
 
         if isinstance(texture, tuple):
             try:

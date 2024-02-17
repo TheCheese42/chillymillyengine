@@ -17,9 +17,10 @@ def init_cme(
     config.app_name = app_name
 
 
+import arcade
 # Exports
 from arcade import (csscolor, exit, get_display_size, get_window, gl,  # noqa
-                    run)
+                    run, tilemap, types)
 
 from . import color, key  # noqa
 
@@ -32,4 +33,6 @@ __all__ = [
     "gl",
     "key",
     "run",
+    "tilemap",
+    "types",
 ]

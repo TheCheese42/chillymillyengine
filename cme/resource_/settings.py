@@ -100,7 +100,7 @@ class Settings(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def apply(self) -> None:
+    def apply(self, *args, **kwargs) -> None:
         """Applies the settings to the game."""
         raise NotImplementedError
 

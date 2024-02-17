@@ -64,3 +64,11 @@ class LangDict(dict):  # type: ignore
                 "Must call `set_languages_path()` before instantiating "
                 "from Language code."
             )
+
+    @staticmethod
+    def get_available_langcodes() -> list[str]:
+        codes = []
+        for file in LangDict.langs_path.iterdir():
+            if file.is_file() and file.suffix == ".toml":
+                codes.append(file.stem)
+        return codes
