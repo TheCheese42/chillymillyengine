@@ -129,6 +129,8 @@ class AnimatedSprite(arcade.Sprite):
                     exc_info=True
                 )
 
+        self.sync_hit_box_to_texture()
+
     def add_texture(
         self,
         texture: arcade.Texture | tuple[arcade.Texture, ...],
@@ -142,7 +144,10 @@ class AnimatedSprite(arcade.Sprite):
         """
         # Prevent weird Texture before first animation tick
         if not self.initial_texture_set:
-            self.texture = texture
+            if isinstance(texture, tuple):
+                self.texture = texture[0]
+            else:
+                self.texture = texture
             self.initial_texture_set = True
 
         if isinstance(texture, tuple):
@@ -178,7 +183,6 @@ class AnimatedSprite(arcade.Sprite):
 class AnimatedWalkingSprite(AnimatedSprite):
     """
     Adds out of the box support for idling und walking textures.
-    Idles by default.
 
     Textures are provided and saved as a list of tuples per category. The
     tuples contain a sprite for each required facing directory. If you just
@@ -189,22 +193,10 @@ class AnimatedWalkingSprite(AnimatedSprite):
 
     def __init__(
         self,
-        filename: Optional[str] = None,
+        path_or_texture: Optional[str] = None,
         scale: float = 1,
-        image_x: float = 0,
-        image_y: float = 0,
-        image_width: float = 0,
-        image_height: float = 0,
         center_x: float = 0,
         center_y: float = 0,
-        repeat_count_x: int = 1,  # Unused
-        repeat_count_y: int = 1,  # Unused
-        flipped_horizontally: bool = False,
-        flipped_vertically: bool = False,
-        flipped_diagonally: bool = False,
-        hit_box_algorithm: Optional[str] = "Simple",
-        hit_box_detail: float = 4.5,
-        texture: Optional[arcade.Texture] = None,
         angle: float = 0,
     ) -> None:
         """
@@ -215,26 +207,12 @@ class AnimatedWalkingSprite(AnimatedSprite):
         """
 
         super().__init__(
-            filename=filename,
+            path_or_texture=path_or_texture,
             scale=scale,
-            image_x=image_x,
-            image_y=image_y,
-            image_width=image_width,
-            image_height=image_height,
             center_x=center_x,
             center_y=center_y,
-            repeat_count_x=repeat_count_x,
-            repeat_count_y=repeat_count_y,
-            flipped_horizontally=flipped_horizontally,
-            flipped_vertically=flipped_vertically,
-            flipped_diagonally=flipped_diagonally,
-            hit_box_algorithm=hit_box_algorithm,
-            hit_box_detail=hit_box_detail,
-            texture=texture,
             angle=angle,
         )
-
-        self.state: Literal["idling", "walking"] = "idling"
 
     def set_idling(self) -> None:
         self.state = "idling"
