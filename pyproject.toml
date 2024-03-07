@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "chilly-milly-engine"
 version = "1.0.0"
 authors = [
-    {name = "Dominik Reinartz", email = "dominik.reinartz@hotmail.com"},
+    {name = "Dominik Reinartz", email = "dominik.reinartz@proton.me"},
 ]
 description = "Game engine for Chilly Milly Games."
 readme = "README.md"

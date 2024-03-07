@@ -33,9 +33,9 @@ def load_sound(
 
 def play_sound(
     sound: arcade.Sound,
-    volume: int,
+    volume: float,
     pan: float = 0,
-    looping: bool = False,
+    loop: bool = False,
     speed: float = 1,
 ) -> Player:
     """
@@ -46,10 +46,11 @@ def play_sound(
         sound=sound,
         volume=volume,
         pan=pan,
-        looping=looping,
+        loop=loop,
         speed=speed,
     )
     player.is_music = sound.is_music if hasattr(sound, "is_music") else False  # type: ignore  # noqa
+    return player
 
 
 def stop_sound(player: Player) -> None:

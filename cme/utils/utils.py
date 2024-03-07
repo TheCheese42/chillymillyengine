@@ -8,6 +8,7 @@ from typing import Any, Optional
 
 from arcade.types import Rect
 from pyglet.text import Label
+import math
 
 
 def get_optimal_font_size(
@@ -133,7 +134,7 @@ def even_distributed_downsample(
     new_length: int,
     preserve_order: bool = False,
 ) -> list[Any]:
-    """Reduce a list to a fixed sice while keeping distribution.
+    """Reduce a list to a fixed size while keeping distribution.
 
     Args:
         original_list (list[Any]): The list to be shortened.
@@ -171,3 +172,20 @@ def even_distributed_downsample(
         idx_to_element = dict(sorted(idx_to_element.items()))
         new_list = list(idx_to_element.values())
     return new_list
+
+
+def calc_change_x_y(speed: float, angle: float) -> tuple[float, float]:
+    """Calculate the movement into X and Y directions based on projectile
+    speed and angle.
+
+    Args:
+        speed (float): The total speed (often pixels per second) the object
+        should fly at.
+        angle (float): The angle the object flies to.
+
+    Returns:
+        tuple[float, float]: X and Y direction speed.
+    """
+    x = speed * math.cos(math.radians(angle))
+    y = speed * math.sin(math.radians(angle))
+    return x, y
