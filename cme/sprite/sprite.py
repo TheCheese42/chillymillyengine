@@ -1,5 +1,5 @@
 """
-Contains several specific premade sprite classes.
+Contains several specific pre-made Sprite classes.
 """
 
 
@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 
 import arcade
 
@@ -16,7 +16,32 @@ from ..enums import Facing
 from ..texture import load_texture
 
 
-class AnimatedSprite(arcade.Sprite):
+class Sprite(arcade.Sprite):
+    """
+    Enhances change_x, change_y and change_angle by multiplying with
+    timedelta. Should generally be taken over ArcadeSprite.
+    """
+    def update(self) -> None:
+        """
+        Overriding due to the fact that arcade's default behavior updates
+        Sprite positions while not taking delta_time into account.
+        This does nothing. Logic is now in `on_update()`.
+        """
+        pass
+
+    def on_update(self, delta_time: float) -> None:
+        """
+        This method moves the sprite based on its velocity and angle change.
+        Takes delta_time into account by multiplying it with the change values.
+        """
+        self.position = (
+            self._position[0] + self.change_x * delta_time,
+            self._position[1] + self.change_y * delta_time,
+        )
+        self.angle += self.change_angle * delta_time
+
+
+class AnimatedSprite(Sprite):
     """
     Provides Support for category based animations.
     Designed for internal use.
@@ -91,7 +116,7 @@ class AnimatedSprite(arcade.Sprite):
     def animation_speed(self, value: int) -> None:
         self._animation_speed = value
 
-    def update_animation(self) -> None:
+    def update_animation(self, delta_time: float = 1/60) -> None:
         """
         Updates the current texture by taking the next texture of the current
         state.

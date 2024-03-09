@@ -13,10 +13,13 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "arcade @ git+https://github.com/pythonarcade/arcade@development",
-    "pyglet>=2.0.dev23",
+    "pyglet==2.0.10",  # Versions below aren't compatible with arcade's version restrictions, versions above break the Label wrappers by arcade
 ]
 
 [project.optional-dependencies]
+arcade-accelerate = [
+    "arcade-accelerate>=1.0.1"
+]
 dev = [
     "flake8>=6.0.0",
     "isort>=5.12.0",

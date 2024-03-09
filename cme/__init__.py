@@ -10,21 +10,32 @@ if sys.version_info[0] < 3 or (
     sys.exit("Chilly Milly Engine requires Python 3.7 or above.")
 
 
+# Check for arcade-accelerate
+ACCELERATED = False
+try:
+    import arcade_accelerate  # type: ignore  # noqa
+    ACCELERATED = True
+except ModuleNotFoundError:
+    pass
+
+
 def init_cme(
     app_name: str,
 ) -> None:
     from . import config
     config.app_name = app_name
 
-
-import arcade
 # Exports
-from arcade import (csscolor, exit, get_display_size, get_window, gl,  # noqa
-                    run, tilemap, types)
+from arcade import (check_for_collision, check_for_collision_with_list,  # noqa
+                    check_for_collision_with_lists, csscolor, exit,
+                    get_display_size, get_window, gl, run, tilemap, types)
 
 from . import color, key  # noqa
 
 __all__ = [
+    "check_for_collision",
+    "check_for_collision_with_list",
+    "check_for_collision_with_lists",
     "color",
     "csscolor",
     "exit",
