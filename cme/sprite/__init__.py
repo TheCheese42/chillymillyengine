@@ -12,7 +12,8 @@ from arcade import (SpriteList, check_for_collision,
                     check_for_collision_with_list,
                     check_for_collision_with_lists)
 
-from .sprite import AnimatedSprite, AnimatedWalkingSprite, Sprite
+from .sprite import (AnimatedSprite, AnimatedWalkingSprite, SimpleUpdater,
+                     Sprite, StrictCollisionUpdater, TopDownUpdater, Updater)
 
 __all__ = [
     "AnimatedSprite",
@@ -26,6 +27,10 @@ __all__ = [
     "PhysicsEngineSimple",
     "PymunkPhysicsEngine",
     "Scene",
+    "SimpleUpdater",
     "Sprite",
     "SpriteList",
+    "StrictCollisionUpdater",
+    "TopDownUpdater",
+    "Updater",
 ]

@@ -60,7 +60,7 @@ class FadingView(View):
 
     def update_fade(self, delta_time: float) -> None:
         """
-        Updates the fade while taking into account `the delta_time` value.
+        Updates the fade while taking into account the `delta_time` value.
         """
         step = self.fade_rate * delta_time
 

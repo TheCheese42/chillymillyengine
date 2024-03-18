@@ -7,13 +7,182 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any, Optional
-
+from typing import Any, Iterable, Optional
+from arcade.types import Rect
 import arcade
 
 from .. import logger
 from ..enums import Facing
 from ..texture import load_texture
+from ..utils import point_in_rect
+
+
+class Updater:
+    def update(self, sprite: arcade.Sprite, delta_time: float):
+        raise NotImplementedError("update() should be overridden by subclass")
+
+
+class SimpleUpdater(Updater):
+    """Just move, taking delta_time into account."""
+
+    def update(self, sprite: arcade.Sprite, delta_time: float):
+        sprite.center_x += sprite.change_x * delta_time
+        sprite.center_y += sprite.change_y * delta_time
+        sprite.angle += sprite.change_angle * delta_time
+
+
+class StrictCollisionUpdater(Updater):
+    """
+    Move taking delta_time into account, cancelling movement into a specific
+    direction when a collision with a wall happens.
+    This can be overidden to enhance mechanics, for example to add border
+    handling
+    """
+
+    def __init__(self, walls: Iterable[arcade.Sprite]):
+        self.walls = walls
+
+    def update(self, sprite: arcade.Sprite, delta_time: float):
+        sprite.center_x += sprite.change_x * delta_time
+        if arcade.check_for_collision_with_list(sprite, self.walls):
+            sprite.center_x -= sprite.change_x * delta_time
+
+        sprite.center_y += sprite.change_y * delta_time
+        if arcade.check_for_collision_with_list(sprite, self.walls):
+            sprite.center_y -= sprite.change_y * delta_time
+
+        sprite.angle += sprite.change_angle * delta_time
+        if arcade.check_for_collision_with_list(sprite, self.walls):
+            sprite.angle -= sprite.change_angle * delta_time
+
+
+class TopDownUpdater(Updater):
+    """
+    Move taking delta_time into account. For top movement, check center
+    collision. For down and sideways movement, strictly check for collisions.
+    For angles this uses strict collision checks as well.
+    Also takes borders into account.
+    """
+
+    def __init__(self, walls: Iterable[arcade.Sprite], border: Rect):
+        self.walls = walls
+        self.border = border
+
+    def update(self, sprite: arcade.Sprite, delta_time: float):
+        prev_x = sprite.center_x
+        sprite.center_x += sprite.change_x * delta_time
+        if (
+            sprite.change_x > 0 and
+            not point_in_rect(sprite.right, sprite.center_y, self.border)
+            or sprite.change_x < 0 and
+            not point_in_rect(sprite.left, sprite.center_y, self.border)
+        ):
+            sprite.center_x = prev_x
+        for wall in arcade.check_for_collision_with_list(
+            sprite, self.walls
+        ) if sprite.center_x != prev_x else []:  # No check if standing still
+            # Does NOT break the rules due to top wall handling
+            if sprite.center_y > wall.bottom:
+                if (
+                    sprite.change_x > 0 and sprite.right > wall.left
+                    or sprite.change_x < 0 and sprite.left < wall.right
+                ):
+                    sprite.center_x = prev_x
+                    break
+
+        prev_y = sprite.center_y
+        sprite.center_y += sprite.change_y * delta_time
+        if (
+            sprite.change_y > 0 and
+            not point_in_rect(sprite.center_x, sprite.top, self.border)
+            or sprite.change_y < 0 and
+            not point_in_rect(sprite.center_x, sprite.bottom, self.border)
+        ):
+            sprite.center_y = prev_y
+        for wall in arcade.check_for_collision_with_list(
+            sprite, self.walls
+        ) if sprite.center_y != prev_y else []:  # No check if standing still
+            # Does NOT break the rules due to top wall handling
+            if sprite.center_y > wall.bottom:
+                if (
+                    sprite.change_y > 0 and sprite.center_y > wall.bottom
+                    or sprite.change_y < 0 and sprite.bottom < wall.top
+                ):
+                    sprite.center_y = prev_y
+                    break
+
+        prev_angle = sprite.angle
+        sprite.angle = sprite.change_angle * delta_time
+        for wall in arcade.check_for_collision_with_list(sprite, self.walls):
+            # Does NOT break the rules due to top wall handling
+            if sprite.center_y > wall.bottom:
+                sprite.angle = prev_angle
+                break
+
+    def _update(self, sprite: arcade.Sprite, delta_time: float):
+        sprite.center_x += sprite.change_x * delta_time
+        for wall in arcade.check_for_collision_with_list(sprite, self.walls):
+            if not sprite.center_y < wall.bottom:  # Fine if above the sprite
+                if (
+                    sprite.change_x > 0
+                    and wall.left < sprite.right
+                    or sprite.change_x < 0
+                    and wall.right > sprite.left
+                ):
+                    sprite.center_x -= sprite.change_x * delta_time
+                    break
+
+        sprite.center_y += sprite.change_y * delta_time
+        for wall in arcade.check_for_collision_with_list(sprite, self.walls):
+            if (
+                sprite.change_y > 0
+                and sprite.center_y < wall.bottom
+                or sprite.change_y < 0
+                and sprite.bottom < wall.top
+            ):
+                sprite.center_y -= sprite.change_y * delta_time
+                break
+
+        sprite.angle += sprite.change_angle * delta_time
+        if arcade.check_for_collision_with_list(sprite, self.walls):
+            sprite.angle -= sprite.change_angle * delta_time
+
+    def __update(self, sprite: arcade.Sprite, delta_time: float):
+        sprite.center_x += sprite.change_x * delta_time
+        if sprite.change_x > 0:
+            for wall in arcade.check_for_collision_with_list(
+                sprite, self.walls
+            ):
+                if wall.left < sprite.right - sprite.width * 0.1:
+                    sprite.center_x -= sprite.change_x * delta_time
+                    break
+        elif sprite.change_x < 0:
+            for wall in arcade.check_for_collision_with_list(
+                sprite, self.walls
+            ):
+                if wall.right > sprite.left - sprite.width * 0.1:
+                    sprite.center_x -= sprite.change_x * delta_time
+                    break
+
+        sprite.center_y += sprite.change_y * delta_time
+        if sprite.change_y > 0:
+            for wall in arcade.check_for_collision_with_list(
+                sprite, self.walls
+            ):
+                if wall.bottom < sprite.center_y:
+                    sprite.center_y -= sprite.change_y * delta_time
+                    break
+        elif sprite.change_y < 0:
+            for wall in arcade.check_for_collision_with_list(
+                sprite, self.walls
+            ):
+                if wall.top > sprite.bottom and wall.bottom < sprite.bottom:  # Prevent getting stuck in top wall # noqa
+                    sprite.center_y -= sprite.change_y * delta_time
+                    break
+
+        sprite.angle += sprite.change_angle * delta_time
+        if arcade.check_for_collision_with_list(sprite, self.walls):
+            sprite.angle -= sprite.change_angle * delta_time
 
 
 class Sprite(arcade.Sprite):
@@ -29,16 +198,16 @@ class Sprite(arcade.Sprite):
         """
         pass
 
-    def on_update(self, delta_time: float) -> None:
+    def on_update(
+        self,
+        delta_time: float,
+        updater: Updater = SimpleUpdater(),
+    ) -> None:
         """
         This method moves the sprite based on its velocity and angle change.
         Takes delta_time into account by multiplying it with the change values.
         """
-        self.position = (
-            self._position[0] + self.change_x * delta_time,
-            self._position[1] + self.change_y * delta_time,
-        )
-        self.angle += self.change_angle * delta_time
+        updater.update(self, delta_time)
 
 
 class AnimatedSprite(Sprite):
