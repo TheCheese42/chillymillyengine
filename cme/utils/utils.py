@@ -16,7 +16,7 @@ def get_optimal_font_size(
     font_name: str,
     container_width: int,
     container_height: int,
-    max_size: int = 512,
+    max_size: float = 512,
     multiline: bool = False,
 ) -> int:
     """
