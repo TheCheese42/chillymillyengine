@@ -168,7 +168,11 @@ class PickleGameSave(metaclass=abc.ABCMeta):
     @classmethod
     def from_pickle(cls, pickle_str: str) -> PickleGameSave:
         """Instantiates the class from a pickle string."""
-        return pickle.loads(pickle_str)
+        new = pickle.loads(pickle_str)
+        for key, value in cls.defaults().items():
+            if not hasattr(new, key):
+                setattr(new, key, value)  # Basic backwards compatibility
+        return new
 
     @staticmethod
     @abc.abstractmethod
