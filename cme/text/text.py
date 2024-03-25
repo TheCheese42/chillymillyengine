@@ -70,6 +70,7 @@ class Text(ArcadeText):
 
         return self._label.left + width
 
+
 class PreconfiguredText(Text):
     """
     Class enabling Text objects with configurable default attributes. Set those
