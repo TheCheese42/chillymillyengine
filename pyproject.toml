@@ -5,21 +5,17 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chilly-milly-engine"
 version = "1.0.0"
-authors = [
-    {name = "Dominik Reinartz", email = "dominik.reinartz@proton.me"},
-]
+authors = [{ name = "Dominik Reinartz", email = "dominik.reinartz@proton.me" }]
 description = "Game engine for Chilly Milly Games."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "arcade @ git+https://github.com/pythonarcade/arcade@development",
-    "pyglet==2.0.10",  # Versions below aren't compatible with arcade's version restrictions, versions above break the Label wrappers by arcade
+    "pyglet>=2.0.14",
 ]
 
 [project.optional-dependencies]
-arcade-accelerate = [
-    "arcade-accelerate>=1.0.1"
-]
+arcade-accelerate = ["arcade-accelerate>=1.0.1"]
 dev = [
     "flake8>=6.0.0",
     "isort>=5.12.0",

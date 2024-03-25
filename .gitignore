@@ -16,3 +16,6 @@ __pycache__/
 
 # vscode
 *.code-workspace
+
+# Python strict editable build
+build/

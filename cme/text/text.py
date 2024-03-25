@@ -37,7 +37,7 @@ class Text(ArcadeText):
             height (Optional[int], optional): Maximum height. Defaults to None.
             max_size (Optional[float], optional): Maximum size. Careful: If
             unset this will default to the current font size. If you need it as
-            big as possible, 512 is recommendet. Defaults to None.
+            big as possible, 512 is recommended. Defaults to None.
         """
         try:
             self.font_size = get_optimal_font_size(
@@ -55,6 +55,20 @@ class Text(ArcadeText):
                 exc_info=True,
             )
 
+    @property
+    def right(self):
+        """
+        XXX TEMP
+        This only fixes pyglet behavior appearing to be a bug. _width is always
+        0, but not None, therefore right always returned left + 0. This can
+        probably be removed when upgrading to future pyglet versions.
+        """
+        if not self._label._width:  # FIX used to check for `is None`
+            width = self._label._content_width
+        else:
+            width = self._label._width
+
+        return self._label.left + width
 
 class PreconfiguredText(Text):
     """
@@ -79,8 +93,8 @@ class PreconfiguredText(Text):
     def __init__(
         self,
         text: Optional[str] = None,
-        start_x: int = 0,
-        start_y: int = 0,
+        x: int = 0,
+        y: int = 0,
         color: Optional[RGBOrA] = None,
         font_size: Optional[float] = None,
         width: int = 0,
@@ -94,7 +108,7 @@ class PreconfiguredText(Text):
         rotation: Optional[float] = None,
         batch: Optional[Batch] = None,
         group: Optional[Group] = None,
-        start_z: int = 0,
+        z: int = 0,
     ):
         if font_size is None:
             font_size = self.DEFAULT_FONT_SIZE
@@ -116,11 +130,11 @@ class PreconfiguredText(Text):
             multiline = self.DEFAULT_MULTILINE
         if rotation is None:
             rotation = self.DEFAULT_ROTATION
-
+        super().__init__()
         super().__init__(
             text,
-            start_x,
-            start_y,
+            x,
+            y,
             color,
             font_size,
             width,
@@ -134,7 +148,7 @@ class PreconfiguredText(Text):
             rotation,
             batch,
             group,
-            start_z,
+            z,
         )
 
 
