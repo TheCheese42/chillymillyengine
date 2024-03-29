@@ -189,3 +189,23 @@ def calc_change_x_y(speed: float, angle: float) -> tuple[float, float]:
     x = speed * math.cos(math.radians(angle))
     y = speed * math.sin(math.radians(angle))
     return x, y
+
+
+def calc_angle(p1: tuple[float, float], p2: tuple[float, float]) -> float:
+    """
+    Calculate the angle between two points.
+
+    :param p1: The starting point
+    :type p1: tuple[float, float]
+    :param p2: The target point
+    :type p2: tuple[float, float]
+    :return: The angle in degrees
+    :rtype: float
+    """
+    delta_x = p2[0] - p1[0]
+    delta_y = p2[1] - p1[1]
+    angle_radians = math.atan2(delta_y, delta_x)
+    angle_degrees = math.degrees(angle_radians)
+    if angle_degrees < 0:
+        angle_degrees += 360
+    return angle_degrees
