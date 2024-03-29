@@ -119,71 +119,6 @@ class TopDownUpdater(Updater):
                 sprite.angle = prev_angle
                 break
 
-    def _update(self, sprite: arcade.Sprite, delta_time: float):
-        sprite.center_x += sprite.change_x * delta_time
-        for wall in arcade.check_for_collision_with_list(sprite, self.walls):
-            if not sprite.center_y < wall.bottom:  # Fine if above the sprite
-                if (
-                    sprite.change_x > 0
-                    and wall.left < sprite.right
-                    or sprite.change_x < 0
-                    and wall.right > sprite.left
-                ):
-                    sprite.center_x -= sprite.change_x * delta_time
-                    break
-
-        sprite.center_y += sprite.change_y * delta_time
-        for wall in arcade.check_for_collision_with_list(sprite, self.walls):
-            if (
-                sprite.change_y > 0
-                and sprite.center_y < wall.bottom
-                or sprite.change_y < 0
-                and sprite.bottom < wall.top
-            ):
-                sprite.center_y -= sprite.change_y * delta_time
-                break
-
-        sprite.angle += sprite.change_angle * delta_time
-        if arcade.check_for_collision_with_list(sprite, self.walls):
-            sprite.angle -= sprite.change_angle * delta_time
-
-    def __update(self, sprite: arcade.Sprite, delta_time: float):
-        sprite.center_x += sprite.change_x * delta_time
-        if sprite.change_x > 0:
-            for wall in arcade.check_for_collision_with_list(
-                sprite, self.walls
-            ):
-                if wall.left < sprite.right - sprite.width * 0.1:
-                    sprite.center_x -= sprite.change_x * delta_time
-                    break
-        elif sprite.change_x < 0:
-            for wall in arcade.check_for_collision_with_list(
-                sprite, self.walls
-            ):
-                if wall.right > sprite.left - sprite.width * 0.1:
-                    sprite.center_x -= sprite.change_x * delta_time
-                    break
-
-        sprite.center_y += sprite.change_y * delta_time
-        if sprite.change_y > 0:
-            for wall in arcade.check_for_collision_with_list(
-                sprite, self.walls
-            ):
-                if wall.bottom < sprite.center_y:
-                    sprite.center_y -= sprite.change_y * delta_time
-                    break
-        elif sprite.change_y < 0:
-            for wall in arcade.check_for_collision_with_list(
-                sprite, self.walls
-            ):
-                if wall.top > sprite.bottom and wall.bottom < sprite.bottom:  # Prevent getting stuck in top wall # noqa
-                    sprite.center_y -= sprite.change_y * delta_time
-                    break
-
-        sprite.angle += sprite.change_angle * delta_time
-        if arcade.check_for_collision_with_list(sprite, self.walls):
-            sprite.angle -= sprite.change_angle * delta_time
-
 
 class Sprite(arcade.Sprite):
     """
@@ -208,6 +143,15 @@ class Sprite(arcade.Sprite):
         Takes delta_time into account by multiplying it with the change values.
         """
         updater.update(self, delta_time)
+
+    @property
+    def center(self) -> tuple[float, float]:
+        return (self.center_x, self.center_y)
+
+    @center.setter
+    def center(self, point: tuple[float, float]) -> None:
+        self.center_x = point[0]
+        self.center_y = point[1]
 
 
 class AnimatedSprite(Sprite):
