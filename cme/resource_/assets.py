@@ -25,23 +25,38 @@ class AssetsPath(type(Path())):  # type: ignore
     def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
         return super().__new__(cls, *pathsegments)  # type: ignore
 
-    def find_asset(self, asset: str) -> Path:
+    def __init__(self, *args) -> None:
+        super().__init__(*args)
+        self.get = self.find_asset
+
+    def find_asset(
+        self,
+        asset: str,
+        preferences: Optional[tuple[str]] = (".png", ".svg"),
+    ) -> Path:
         """
         Returns first occurrence of the provided filename.
 
         `assets` parameter may use glob syntax.
+        `prefers` should be a tuple containing preferred extensions. Defaults
+        to `.png` and `.svg`. If None, the first match will be picked.
         """
 
         for item in self.rglob(asset):
-            return Path(item)
+            if not preferences or item.suffix in preferences:
+                return Path(item)
         else:
+            if preferences:
+                # Nothing found matching preferences, trying again without any
+                return self.find_asset(asset, preferences=None)
+
+            if "." not in asset:
+                # .find_asset("filename") without ext should also be allowed
+                return self.find_asset(fr"{asset}.*")
+
             raise FileNotFoundError(
                 f"Could not find an asset with glob `{asset}`"
             )
-
-    def get(self, asset: str) -> Path:
-        """Alias for find_asset() method."""
-        return self.find_asset(asset)
 
 
 def set_assets_path(assets_path: Path | str) -> None:

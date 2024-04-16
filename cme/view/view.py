@@ -17,6 +17,7 @@ class View(arcade.View):
         pass
 
     def on_draw(self) -> None:
+        """Clears the screen, should be called before drawing anything else."""
         super().on_draw()  # type: ignore
         self.clear()
 

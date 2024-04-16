@@ -229,7 +229,7 @@ class AnimatedSprite(Sprite):
     def animation_speed(self, value: int) -> None:
         self._animation_speed = value
 
-    def update_animation(self, delta_time: float = 1/60) -> None:
+    def update_animation(self, delta_time: float = 1 / 60) -> None:
         """
         Updates the current texture by taking the next texture of the current
         state.

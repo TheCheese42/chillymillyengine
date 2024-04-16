@@ -17,7 +17,7 @@ class Window(arcade.Window):
         self,
         width: int = 800,
         height: int = 600,
-        title: Optional[str] = 'Arcade Window',
+        title: Optional[str] = 'Window',
         fullscreen: bool = False,
         resizable: bool = False,
         update_rate: float = 1 / 60,
@@ -50,3 +50,12 @@ class Window(arcade.Window):
             samples=samples,
             enable_polling=enable_polling,
         )
+
+    def on_resize(self, width: int, height: int):
+        super().on_resize(width, height)
+        if not self.fullscreen:
+            # Some window managers will not respect minimum size
+            if width < self._minimum_size[0]:
+                self.width = self._minimum_size[0]
+            if height < self._minimum_size[1]:
+                self.height = self._minimum_size[1]

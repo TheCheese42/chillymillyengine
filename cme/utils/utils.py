@@ -181,7 +181,7 @@ def calc_change_x_y(speed: float, angle: float) -> tuple[float, float]:
     Args:
         speed (float): The total speed (often pixels per second) the object
         should fly at.
-        angle (float): The angle the object flies to.
+        angle (float): The angle the object flies to in degrees.
 
     Returns:
         tuple[float, float]: X and Y direction speed.
@@ -209,3 +209,8 @@ def calc_angle(p1: tuple[float, float], p2: tuple[float, float]) -> float:
     if angle_degrees < 0:
         angle_degrees += 360
     return angle_degrees
+
+
+class NullStream:
+    def write(*args, **kwargs) -> None:
+        pass

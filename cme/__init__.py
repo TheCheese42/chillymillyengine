@@ -27,8 +27,9 @@ def init_cme(
 
 # Exports
 from arcade import (check_for_collision, check_for_collision_with_list,  # noqa
-                    check_for_collision_with_lists, csscolor, exit,
-                    get_display_size, get_window, gl, run, tilemap, types)
+                    check_for_collision_with_lists, csscolor, disable_timings,
+                    enable_timings, exit, get_display_size, get_fps,
+                    get_window, gl, run, tilemap, types)
 
 from . import color, key  # noqa
 
@@ -38,8 +39,11 @@ __all__ = [
     "check_for_collision_with_lists",
     "color",
     "csscolor",
+    "disable_timings",
+    "enable_timings",
     "exit",
     "get_display_size",
+    "get_fps",
     "get_window",
     "gl",
     "key",
