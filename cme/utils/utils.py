@@ -3,12 +3,12 @@ Provides useful utility functions.
 """
 
 
+import math
 from collections import defaultdict
 from typing import Any, Optional
 
 from arcade.types import Rect
 from pyglet.text import Label
-import math
 
 
 def get_optimal_font_size(
@@ -88,12 +88,20 @@ def str2bool(string: str, return_false_on_error: bool = False) -> bool:
     """
     true = ["true", "t", "1", "y", "yes", "enabled", "enable", "on"]
     false = ["false", "f", "0", "n", "no", "disabled", "disable", "off"]
-    if string.lower() in true:
-        return True
-    elif string.lower() in false or return_false_on_error:
-        return False
-    else:
-        raise ValueError(f"The value {string} cannot be mapped to boolean.")
+    try:
+        if string.lower() in true:
+            out = True
+        elif string.lower() in false or return_false_on_error:
+            out = False
+        else:
+            raise ValueError(
+                f"The value {string} cannot be mapped to boolean."
+            )
+    except AttributeError:
+        if return_false_on_error:
+            return False
+        raise TypeError(f"The value {string} is not a string.")
+    return out
 
 
 def point_in_rect(x: int, y: int, rect: Rect) -> bool:
@@ -212,5 +220,5 @@ def calc_angle(p1: tuple[float, float], p2: tuple[float, float]) -> float:
 
 
 class NullStream:
-    def write(*args, **kwargs) -> None:
+    def write(self, *args, **kwargs) -> None:
         pass

@@ -1,4 +1,4 @@
-import pyglet
+import arcade
 import pytest
 
 from cme.gui import UIBlinkingLabel
@@ -12,7 +12,7 @@ def sample_blinkinglabel() -> UIBlinkingLabel:
 @pytest.mark.requires_window
 def test_property_defaults(
     sample_blinkinglabel: UIBlinkingLabel,
-    initialize_window: pyglet.window.Window,
+    initialize_window: arcade.Window,
 ) -> None:
     initialize_window  # to remove not accessed hint
     assert sample_blinkinglabel.blink_speed == 1.0
@@ -24,7 +24,7 @@ def test_property_defaults(
 @pytest.mark.requires_window
 def test_on_update_down(
     sample_blinkinglabel: UIBlinkingLabel,
-    initialize_window: pyglet.window.Window,
+    initialize_window: arcade.Window,
 ) -> None:
     initialize_window  # to remove not accessed hint
     sample_blinkinglabel.on_update(0.5)
@@ -34,7 +34,7 @@ def test_on_update_down(
 @pytest.mark.requires_window
 def test_on_update_up(
     sample_blinkinglabel: UIBlinkingLabel,
-    initialize_window: pyglet.window.Window,
+    initialize_window: arcade.Window,
 ) -> None:
     initialize_window  # to remove not accessed hint
     sample_blinkinglabel.on_update(1)  # Set _opacity to 0

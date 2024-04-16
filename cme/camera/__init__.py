@@ -1,9 +1,18 @@
 """
-Contains the arcade camera class.
+Contains the arcade camera classes.
 """
 
-from arcade import Camera
+from arcade.camera import (Camera2D, CameraData, OrthographicProjectionData,
+                           OrthographicProjector, PerspectiveProjectionData,
+                           PerspectiveProjector, Projection, Projector)
 
 __all__ = [
-    "Camera"
+    "Camera2D",
+    "CameraData",
+    "OrthographicProjectionData",
+    "OrthographicProjector",
+    "PerspectiveProjectionData",
+    "PerspectiveProjector",
+    "Projection",
+    "Projector",
 ]
