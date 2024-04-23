@@ -7,7 +7,11 @@ from pathlib import Path
 
 from pyglet import resource
 
-from ..config import app_name
+try:
+    from ..config import app_name
+except ImportError:
+    import random
+    app_name = f"unnamed_cme_game_{random.randint(0, 1_000_000)}"
 
 # Appdata and settings path
 DATA_PATH = Path(resource.get_data_path(app_name))
