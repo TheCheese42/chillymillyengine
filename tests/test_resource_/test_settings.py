@@ -2,11 +2,11 @@ from typing import Any
 
 import pytest
 
+from cme import resource_
+
 
 @pytest.fixture
-def custom_settings_class(initialize_cme: None) -> type:
-    from cme import resource_
-
+def custom_settings_class() -> type:
     class CustomSettings(resource_.Settings):
         def apply(self) -> None:
             return super().apply()
@@ -28,7 +28,7 @@ def custom_settings_class(initialize_cme: None) -> type:
     return CustomSettings
 
 
-def test_settings_interface(initialize_cme: None) -> None:
+def test_settings_interface() -> None:
     from cme import resource_
     with pytest.raises(TypeError):
         resource_.Settings()  # type: ignore

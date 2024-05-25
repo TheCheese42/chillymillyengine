@@ -26,7 +26,7 @@ def test_update_text_size(
 ) -> None:
     optimal_font_size = get_optimal_font_size(
         sample_fixedlabel.text,
-        sample_fixedlabel.label.font_name[0],  # type: ignore
+        sample_fixedlabel.label.font_name[0],
         sample_fixedlabel.width,
         sample_fixedlabel.height,
     )

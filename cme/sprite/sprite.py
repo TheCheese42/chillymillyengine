@@ -8,8 +8,9 @@ from __future__ import annotations
 import time
 from pathlib import Path
 from typing import Any, Iterable, Optional
-from arcade.types import Rect
+
 import arcade
+from arcade.types import Rect
 
 from .. import logger
 from ..enums import Facing
@@ -18,14 +19,14 @@ from ..utils import point_in_rect
 
 
 class Updater:
-    def update(self, sprite: arcade.Sprite, delta_time: float):
+    def update(self, sprite: arcade.Sprite, delta_time: float) -> None:
         raise NotImplementedError("update() should be overridden by subclass")
 
 
 class SimpleUpdater(Updater):
     """Just move, taking delta_time into account."""
 
-    def update(self, sprite: arcade.Sprite, delta_time: float):
+    def update(self, sprite: arcade.Sprite, delta_time: float) -> None:
         sprite.center_x += sprite.change_x * delta_time
         sprite.center_y += sprite.change_y * delta_time
         sprite.angle += sprite.change_angle * delta_time
@@ -35,14 +36,14 @@ class StrictCollisionUpdater(Updater):
     """
     Move taking delta_time into account, cancelling movement into a specific
     direction when a collision with a wall happens.
-    This can be overidden to enhance mechanics, for example to add border
+    This can be overridden to enhance mechanics, for example to add border
     handling
     """
 
-    def __init__(self, walls: Iterable[arcade.Sprite]):
+    def __init__(self, walls: arcade.SpriteList[Sprite]):
         self.walls = walls
 
-    def update(self, sprite: arcade.Sprite, delta_time: float):
+    def update(self, sprite: arcade.Sprite, delta_time: float) -> None:
         sprite.center_x += sprite.change_x * delta_time
         if arcade.check_for_collision_with_list(sprite, self.walls):
             sprite.center_x -= sprite.change_x * delta_time
@@ -64,11 +65,11 @@ class TopDownUpdater(Updater):
     Also takes borders into account.
     """
 
-    def __init__(self, walls: Iterable[arcade.Sprite], border: Rect):
+    def __init__(self, walls: arcade.SpriteList[Sprite], border: Rect):
         self.walls = walls
         self.border = border
 
-    def update(self, sprite: arcade.Sprite, delta_time: float):
+    def update(self, sprite: arcade.Sprite, delta_time: float) -> None:
         prev_x = sprite.center_x
         sprite.center_x += sprite.change_x * delta_time
         if (
@@ -133,7 +134,7 @@ class Sprite(arcade.Sprite):
         """
         pass
 
-    def on_update(
+    def on_update(  # type: ignore[override]  # (Save because it only adds a default argument)  # noqa
         self,
         delta_time: float,
         updater: Updater = SimpleUpdater(),
@@ -267,7 +268,7 @@ class AnimatedSprite(Sprite):
                     exc_info=True
                 )
 
-        self.sync_hit_box_to_texture()
+        self.sync_hit_box_to_texture()  # type: ignore[no-untyped-call]
 
     def add_texture(
         self,

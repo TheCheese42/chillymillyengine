@@ -45,3 +45,72 @@ def test_str2bool() -> None:
             utils.str2bool(v)  # type: ignore
     for v in invalid:
         assert utils.str2bool(v, True) is False  # type: ignore
+
+
+def test_point_in_rect() -> None:
+    assert utils.point_in_rect(0, 0, (0, 0, 10, 10))
+    assert utils.point_in_rect(5, 5, (0, 0, 10, 10))
+    assert utils.point_in_rect(10, 10, (0, 0, 10, 10))
+    assert not utils.point_in_rect(-1, -1, (0, 0, 10, 10))
+    assert not utils.point_in_rect(11, 11, (0, 0, 10, 10))
+    assert not utils.point_in_rect(5, 15, (2, 4, 12, 9))
+
+    assert utils.point_in_rect(0.0, 0.0, (0.0, 0.0, 10.0, 10.0))
+    assert utils.point_in_rect(5.5, 5.5, (0.0, 0.0, 10.0, 10.0))
+    assert utils.point_in_rect(10.2, 10.2, (0.5, 0.5, 10.2, 10.2))
+    assert not utils.point_in_rect(-1.0, -1.0, (0.0, 0.0, 10.0, 10.0))
+    assert not utils.point_in_rect(11.5, 11.5, (0.1, 0.1, 10.6, 10.6))
+    assert not utils.point_in_rect(5.6, 15.3, (2.6, 4.7, 12.2, 9.4))
+
+    assert utils.point_in_rect(0, 0, (0, 0, 0, 0))
+    assert utils.point_in_rect(0.0, 0.0, (0.0, 0.0, 0.0, 0.0))
+    assert not utils.point_in_rect(-1, 1, (0, 0, 0, 0))
+    assert not utils.point_in_rect(1, 1, (0, 0, 0, 0))
+    assert not utils.point_in_rect(1.0, 1.0, (0.0, 0.0, 0.0, 0.0))
+    assert not utils.point_in_rect(-1.0, 1.0, (0.0, 0.0, 0.0, 0.0))
+
+
+def test_missing_keys() -> None:
+    assert utils.missing_keys({1: 2, 2: 3, 3: 4}, {1: 5, 3: 6}) == [2]
+    assert utils.missing_keys({1: 2, 3: 4}, {1: 5, 3: 6}) == []
+    assert utils.missing_keys({1: 2, 3: 4}, {1: 5, 2: 42, 3: 6}) == []
+
+
+def test_shrink_list_simple() -> None:
+    assert utils.shrink_list_simple(list(range(1, 11)), 5) == [1, 3, 5, 7, 9]
+    assert utils.shrink_list_simple(list(range(1, 11)), 2) == [1, 6]
+    assert utils.shrink_list_simple([1, 2, 3], 1) == [1]
+    assert utils.shrink_list_simple([1, 2, 3, 4, 5], 2) == [1, 4]
+
+
+def test_calc_change_x_y() -> None:
+    assert utils.calc_change_x_y(10, 0) == (10, 0)
+    assert utils.calc_change_x_y(10, 90) == (0, 10)
+    assert utils.calc_change_x_y(10, 180) == (-10, 0)
+    assert utils.calc_change_x_y(10, 270) == (0, -10)
+    assert utils.calc_change_x_y(10, -90) == (0, -10)
+    assert utils.calc_change_x_y(10, -180) == (-10, 0)
+    assert utils.calc_change_x_y(10, -270) == (0, 10)
+    assert utils.calc_change_x_y(10, 360) == (10, 0)
+    assert utils.calc_change_x_y(10, 450) == (0, 10)
+    assert utils.calc_change_x_y(0, 348) == (0, 0)
+    assert utils.calc_change_x_y(-10, 270) == (0, 10)
+    assert utils.calc_change_x_y(10, 45) == (7.0710678119, 7.0710678119)
+    assert utils.calc_change_x_y(10, 127) == (-6.0181502315, 7.9863551005)
+
+
+def test_calc_angle() -> None:
+    assert utils.calc_angle((0, 0), (0, 0)) == 0
+    assert utils.calc_angle((1, 1), (2, 1)) == 0
+    assert utils.calc_angle((2, 1), (1, 1)) == 180
+    assert utils.calc_angle((1, 1), (2, 2)) == 45
+    assert utils.calc_angle((-1, -1), (-2, -2)) == 225
+    assert utils.calc_angle((-5, -2), (2, 3)) == 35.53767779197438
+
+
+def test_null_stream() -> None:
+    stream = utils.NullStream()
+    assert stream.write() is None  # type: ignore[func-returns-value]
+    assert stream.write("I NEED HELP") is None  # type: ignore[func-returns-value]  # noqa
+    assert stream.write(kwarg="test") is None  # type: ignore[func-returns-value]  # noqa
+    assert stream.write("NVM", key=42) is None  # type: ignore[func-returns-value]  # noqa

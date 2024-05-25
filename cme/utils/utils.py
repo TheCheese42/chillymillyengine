@@ -7,7 +7,7 @@ import math
 from collections import defaultdict
 from typing import Any, Optional
 
-from arcade.types import Rect
+from arcade.types import Rect, FloatRect
 from pyglet.text import Label
 
 
@@ -18,13 +18,13 @@ def get_optimal_font_size(
     container_height: int,
     max_size: float = 512,
     multiline: bool = False,
-) -> int:
+) -> float:
     """
     Calculates the optimal font size to fit a given text inside a container.
     This uses a binary search algorithm for best performance.
     """
     max_size = max_size
-    min_size = 1
+    min_size = 1.0
 
     while True:
         label = Label(
@@ -76,11 +76,11 @@ def str2bool(string: str, return_false_on_error: bool = False) -> bool:
     Args:
         string (str): The string to be parsed.
         return_false_on_error (bool, optional): Wether an exception should be
-        raised when the string is unidentifyable or not. If `True` no exception
+        raised when the string is unidentifiable or not. If `True` no exception
         will be raised and the function returns `None`. Defaults to False.
 
     Raises:
-        ValueError: The string is unidentifyable. Only raises when
+        ValueError: The string is unidentifiable. Only raises when
         `return_false_on_error` is set to `False`.
 
     Returns:
@@ -104,13 +104,35 @@ def str2bool(string: str, return_false_on_error: bool = False) -> bool:
     return out
 
 
-def point_in_rect(x: int, y: int, rect: Rect) -> bool:
+def point_in_rect(x: float, y: float, rect: Rect | FloatRect) -> bool:
+    """
+    Find out wether the specified point is inside a rectangle.
+
+    :param x: X coordinate of the point
+    :type x: float
+    :param y: Y coordinate of the point
+    :type y: float
+    :param rect: Rectangle (x, y, width, height)
+    :type rect: Rect | FloatRect
+    :return: Wether the point is inside the rectangle
+    :rtype: bool
+    """
     return (
         rect[0] <= x <= rect[0] + rect[2] and rect[1] <= y <= rect[1] + rect[3]
     )
 
 
 def missing_keys(dict1: dict[Any, Any], dict2: dict[Any, Any]) -> list[Any]:
+    """
+    Return all keys available in dict1 but not in dict2.
+
+    :param dict1: The dictionary with all keys
+    :type dict1: dict[Any, Any]
+    :param dict2: The dictionary possibly missing keys
+    :type dict2: dict[Any, Any]
+    :return: All keys in dict1 but not in dict2
+    :rtype: list[Any]
+    """
     missing_keys_list = [key for key in dict1 if key not in dict2]
     return missing_keys_list
 
@@ -142,7 +164,9 @@ def even_distributed_downsample(
     new_length: int,
     preserve_order: bool = False,
 ) -> list[Any]:
-    """Reduce a list to a fixed size while keeping distribution.
+    """
+    Reduce a list to a fixed size while keeping distribution.
+    Requires numpy to be installed.
 
     Args:
         original_list (list[Any]): The list to be shortened.
@@ -155,7 +179,7 @@ def even_distributed_downsample(
         list[Any]: The reduced list.
     """
     try:
-        import numpy as np  # type: ignore
+        import numpy as np
     except ImportError:
         raise ImportError(
             "numpy must be installed for this to work"
@@ -194,8 +218,8 @@ def calc_change_x_y(speed: float, angle: float) -> tuple[float, float]:
     Returns:
         tuple[float, float]: X and Y direction speed.
     """
-    x = speed * math.cos(math.radians(angle))
-    y = speed * math.sin(math.radians(angle))
+    x = round(speed * math.cos(math.radians(angle)), 10)
+    y = round(speed * math.sin(math.radians(angle)), 10)
     return x, y
 
 
@@ -220,5 +244,5 @@ def calc_angle(p1: tuple[float, float], p2: tuple[float, float]) -> float:
 
 
 class NullStream:
-    def write(self, *args, **kwargs) -> None:
+    def write(self, *args: Any, **kwargs: Any) -> None:
         pass

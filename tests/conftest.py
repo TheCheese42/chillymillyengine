@@ -15,7 +15,7 @@ from cme import init_cme  # noqa
 def initialize_window() -> Generator[arcade.Window, None, None]:
     window = arcade.Window()
     yield window
-    window.close()
+    window.close()  # type: ignore[no-untyped-call]
 
 
 @pytest.fixture(scope="session", autouse=True)
