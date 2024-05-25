@@ -9,10 +9,10 @@ from cme import resource_
 def custom_settings_class() -> type:
     class CustomSettings(resource_.Settings):
         def apply(self) -> None:
-            return super().apply()
+            pass
 
         def update(self, *args: Any, **kwargs: Any) -> None:
-            return super().update(*args, **kwargs)
+            pass
 
         def _serialize(self) -> dict[Any, Any]:
             return {}
