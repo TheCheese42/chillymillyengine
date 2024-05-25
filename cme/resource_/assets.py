@@ -26,7 +26,7 @@ class AssetsPath(type(Path())):  # type: ignore
         return super().__new__(cls, *pathsegments)  # type: ignore
 
     def __init__(self, *args) -> None:
-        super().__init__(*args)
+        # super().__init__(*args)
         self.get = self.find_asset
 
     def find_asset(
@@ -38,7 +38,7 @@ class AssetsPath(type(Path())):  # type: ignore
         Returns first occurrence of the provided filename.
 
         `assets` parameter may use glob syntax.
-        `prefers` should be a tuple containing preferred extensions. Defaults
+        `preferences` should be a tuple containing preferred extensions. Defaults
         to `.png` and `.svg`. If None, the first match will be picked.
         """
 
