@@ -13,7 +13,7 @@ if sys.version_info[0] < 3 or (
 # Check for arcade-accelerate
 ACCELERATED = False
 try:
-    import arcade_accelerate  # type: ignore  # noqa
+    import arcade_accelerate  # noqa
     ACCELERATED = True
 except ModuleNotFoundError:
     pass
