@@ -34,9 +34,9 @@ from arcade.gui.widgets.text import (UIInputText, UILabel, UITextArea,
 from arcade.gui.widgets.toggle import UITextureToggle
 
 # Custom gui elements
-from .gui import (UIBlinkingLabel, UIEmptySpace, UIFineColoredSlider, UIFixedSizeLabel,
-                  UIHoverOverlay, UIKeybindPicker, UITextureMessageBox,
-                  UIToolTipButton)
+from .gui import (UIBlinkingLabel, UIEmptySpace, UIFineColoredSlider,
+                  UIFixedSizeLabel, UIHoverOverlay, UIKeybindPicker,
+                  UITextureMessageBox, UIToolTipButton)
 
 __all__ = [
     "NinePatchTexture",

@@ -2,7 +2,7 @@ from typing import Optional, Union
 
 from arcade import Text as ArcadeText
 from arcade import csscolor
-from arcade.types import RGBOrA
+from arcade.types import RGBOrA255
 from pyglet.graphics import Batch, Group
 
 from .. import logger
@@ -27,7 +27,7 @@ class Text(ArcadeText):
         width: Optional[int] = None,
         height: Optional[int] = None,
         max_size: Optional[float] = None,
-    ):
+    ) -> None:
         """Set the Text font size according to the provided sizes and text.
         If no values are passed, the ones stored in the Text object are used.
 
@@ -39,12 +39,16 @@ class Text(ArcadeText):
             unset this will default to the current font size. If you need it as
             big as possible, 512 is recommended. Defaults to None.
         """
+        if isinstance(self.font_name, str):
+            font_name = self.font_name
+        else:
+            font_name = self.font_name[0]
         try:
             self.font_size = get_optimal_font_size(
                 text=text or self.text,
-                font_name=self.font_name,
-                container_width=width or self.width,
-                container_height=height or self.height,
+                font_name=font_name,
+                container_width=width or self.width or 0,
+                container_height=height or self.height or 0,
                 max_size=max_size or self.font_size,
                 multiline=self.multiline,
             )
@@ -56,7 +60,7 @@ class Text(ArcadeText):
             )
 
     @property
-    def right(self):
+    def right(self) -> float:
         """
         XXX TEMP
         This only fixes pyglet behavior appearing to be a bug. _width is always
@@ -68,7 +72,7 @@ class Text(ArcadeText):
         else:
             width = self._label._width
 
-        return self._label.left + width
+        return self._label.left + width  # type: ignore
 
 
 class PreconfiguredText(Text):
@@ -82,7 +86,7 @@ class PreconfiguredText(Text):
 
     DEFAULT_FONT_SIZE: float = 0
     DEFAULT_FONT_NAME: Union[str, tuple[str, ...]] = "Arial"
-    DEFAULT_COLOR: RGBOrA = csscolor.WHITE
+    DEFAULT_COLOR: RGBOrA255 = csscolor.WHITE
     DEFAULT_ALIGN: str = "left"
     DEFAULT_BOLD: bool = False
     DEFAULT_ITALIC: bool = False
@@ -93,10 +97,10 @@ class PreconfiguredText(Text):
 
     def __init__(
         self,
-        text: Optional[str] = None,
+        text: str = "",
         x: int = 0,
         y: int = 0,
-        color: Optional[RGBOrA] = None,
+        color: Optional[RGBOrA255] = None,
         font_size: Optional[float] = None,
         width: int = 0,
         align: Optional[str] = None,
@@ -131,7 +135,7 @@ class PreconfiguredText(Text):
             multiline = self.DEFAULT_MULTILINE
         if rotation is None:
             rotation = self.DEFAULT_ROTATION
-        super().__init__()
+
         super().__init__(
             text,
             x,

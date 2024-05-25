@@ -19,7 +19,7 @@ def start_worker_process(
     kwargs: Mapping[str, Any] = {},
     daemon: Optional[bool] = None,
     callback: Optional[Callable[[], None]] = None,
-) -> multiprocessing.Queue:
+) -> multiprocessing.Queue[Any]:
     """
     Opens a worker process for heavy, blocking tasks. Enables usage of multiple
     CPUs. If this is not required `start_helper_thread` might be a better pick.
@@ -29,7 +29,7 @@ def start_worker_process(
     as it contains the target's return value.
     """
     def wrapper(
-        queue: multiprocessing.Queue,
+        queue: multiprocessing.Queue[Any],
         *args: tuple[Any],
         **kwargs: Mapping[Any, Any],
     ) -> None:
@@ -37,7 +37,7 @@ def start_worker_process(
         queue.put(output)
         if callback:
             callback()
-    queue = multiprocessing.Queue()
+    queue: multiprocessing.Queue[Any] = multiprocessing.Queue()
     process = multiprocessing.Process(
         target=wrapper,
         name=name,
@@ -54,7 +54,7 @@ def setup_worker_process(
     target: Callable[[], Any],
     name: Optional[str] = None,
     daemon: Optional[bool] = None,
-) -> multiprocessing.Queue:
+) -> multiprocessing.Queue[Any]:
     """
     Set up a permanent worker process processing on demand. This can be useful
     to avoid process create overhead. To use, simply store the queue returned
@@ -72,13 +72,13 @@ def setup_worker_process(
     :return: A queue to put arguments for `target` into, on demand
     :rtype: multiprocessing.Queue
     """
-    def wrapper(queue: multiprocessing.Queue) -> None:
+    def wrapper(queue: multiprocessing.Queue[Any]) -> None:
         while True:
             args = queue.get()
             out_queue = args[0]
             output = target(*args[1:])
             out_queue.put(output)
-    queue = multiprocessing.Queue()
+    queue: multiprocessing.Queue[Any] = multiprocessing.Queue()
     process = multiprocessing.Process(
         target=wrapper,
         name=name,

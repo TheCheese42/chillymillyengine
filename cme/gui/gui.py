@@ -10,6 +10,7 @@ from arcade.gui.nine_patch import NinePatchTexture
 from arcade.gui.style import UIStyleBase
 from arcade.gui.surface import Surface
 from arcade.math import get_distance
+
 from cme import csscolor, key, shapes
 from cme.texture import Texture
 from cme.utils import get_optimal_font_size, point_in_rect
@@ -281,18 +282,18 @@ class UIToolTipButton(gui.UITextureButton):
         property.
         """
         super().__init__(
-            x,
-            y,
-            width,
-            height,
-            texture,
-            texture_hovered,
-            texture_pressed,
-            texture_disabled,
-            text,
-            multiline,
-            scale,
-            style,
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+            texture=texture,
+            texture_hovered=texture_hovered,
+            texture_pressed=texture_pressed,
+            texture_disabled=texture_disabled,
+            text=text,
+            multiline=multiline,
+            scale=scale,
+            style=style,
             **kwargs,
         )
         self._tooltip_label = gui.UILabel(
@@ -1034,11 +1035,11 @@ class UIEmptySpace(gui.UIWidget):
 
     def __init__(
         self,
-        x=0,
-        y=0,
-        width=100,
-        height=100,
-    ):
+        x: int = 0,
+        y: int = 0,
+        width: int = 100,
+        height: int = 100,
+    ) -> None:
         super().__init__(
             x=x,
             y=y,
@@ -1046,5 +1047,5 @@ class UIEmptySpace(gui.UIWidget):
             height=height,
         )
 
-    def do_render(self, surface: Surface):
-        self.prepare_render(surface)
+    def do_render(self, surface: Surface) -> None:
+        self.prepare_render(surface)  # type: ignore[no-untyped-call]

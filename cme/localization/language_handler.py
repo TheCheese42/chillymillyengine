@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 try:
-    import tomllib  # type: ignore
+    import tomllib
 except ImportError:
-    import tomli as tomllib
+    import tomli as tomllib  # type: ignore
 
 from pathlib import Path
 
@@ -14,7 +14,7 @@ from .. import logger
 DEFAULT_LANGUAGE = "en_US"
 
 
-class LangDict(dict):  # type: ignore
+class LangDict(dict):  # type: ignore[type-arg]
     langcode: str
     langs_path: Path
 

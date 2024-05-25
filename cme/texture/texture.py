@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Any, Iterable, Union
+
 from arcade.hitbox import HitBoxAlgorithm, SimpleHitBoxAlgorithm
 from arcade.texture import Texture, load_texture
 
@@ -7,8 +8,8 @@ from arcade.texture import Texture, load_texture
 def load_texture_series(
     dir: Union[Path, str],
     stem: str,
-    range_: Iterable,
-    hit_box_algorithm: HitBoxAlgorithm = SimpleHitBoxAlgorithm(),
+    range_: Iterable[Any],
+    hit_box_algorithm: HitBoxAlgorithm = SimpleHitBoxAlgorithm(),  # type: ignore[no-untyped-call]  # noqa
 ) -> list[Texture]:
     """Load a series of textures following a name schema from a directory.
 
@@ -25,6 +26,7 @@ def load_texture_series(
     Returns:
         list[Texture]: A list of loaded textures.
     """
+    dir = Path(dir)
     textures = []
     for i in range_:
         textures.append(load_texture(

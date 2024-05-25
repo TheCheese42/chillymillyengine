@@ -55,7 +55,7 @@ class Window(arcade.Window):
             draw_rate=draw_rate,
         )
 
-    def on_resize(self, width: int, height: int):
+    def on_resize(self, width: int, height: int) -> None:
         super().on_resize(width, height)
         if not self.fullscreen:
             # Some window managers will not respect minimum size

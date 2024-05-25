@@ -7,7 +7,7 @@ import math
 from collections import defaultdict
 from typing import Any, Optional
 
-from arcade.types import Rect, FloatRect
+from arcade.types import FloatRect, Rect
 from pyglet.text import Label
 
 
