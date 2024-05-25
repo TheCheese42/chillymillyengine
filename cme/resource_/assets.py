@@ -68,6 +68,3 @@ def set_assets_path(assets_path: Path | str) -> None:
 
 def get_assets_path() -> Optional[AssetsPath]:
     return ASSETS_PATH
-
-
-Path("s32", "dspy")
