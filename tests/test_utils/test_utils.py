@@ -24,21 +24,24 @@ def test_get_optimal_font_size(initialize_window: None) -> None:
 
 
 def test_str2bool() -> None:
-    truthy = [
+    truthy: list[str] = [
         "true", "TRUE", "tRuE", "t", "T", "1", "y", "Y", "yes", "YES", "YeS",
         "enabled", "enable", "on",
     ]
-    falsy = [
+    falsy: list[str] = [
         "false", "FALSE", "fAlSe", "f", "F", "0", "n", "N", "disabled",
         "disable", "off",
     ]
-    invalid = ["10", True, False, 0, 1, "nope", "fake", "sure", "AHAHHAHAHAHA"]
+    invalid: list[str | bool | int] = [
+        "10", True, False, 0, 1, "nope", "fake", "sure", "AHAHHAHAHAHA"
+    ]
+    v: str | bool | int
     for v in truthy:
         assert utils.str2bool(v) is True
     for v in falsy:
         assert utils.str2bool(v) is False
     for v in invalid:
         with pytest.raises((ValueError, TypeError)):
-            utils.str2bool(v)
+            utils.str2bool(v)  # type: ignore
     for v in invalid:
-        assert utils.str2bool(v, True) is False
+        assert utils.str2bool(v, True) is False  # type: ignore
