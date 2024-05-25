@@ -21,13 +21,13 @@ class AssetsPath(type(Path())):  # type: ignore
     Subclass or instantiate this to create a hierarchie of assets folders
     (e.g. `ImagesPath`, `SoundsPath`, ...).
     """
-
     def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
-        return super().__new__(cls, *pathsegments)  # type: ignore
+        obj: AssetsPath = super().__new__(cls, *pathsegments)
+        obj.get = obj.find_asset
+        return obj
 
-    def __init__(self, *args: Any) -> None:
-        super().__init__(*args)
-        self.get = self.find_asset
+    # Avoiding using an __init__ because it doesn't work really well with the
+    # pathlib Path system
 
     def find_asset(
         self,
@@ -68,3 +68,6 @@ def set_assets_path(assets_path: Path | str) -> None:
 
 def get_assets_path() -> Optional[AssetsPath]:
     return ASSETS_PATH
+
+
+Path("s32", "dspy")
