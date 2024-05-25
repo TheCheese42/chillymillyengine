@@ -4,10 +4,13 @@ from typing import Any, Generator
 
 import pytest
 
+from cme import resource_
+
 
 @pytest.fixture
-def temp_assetspath(initialize_cme: None) -> Generator[Path, None, None]:
-    from cme import resource_
+def temp_assetspath(initialize_cme: None) -> Generator[
+    resource_.AssetsPath, None, None
+]:
     with tempfile.TemporaryDirectory() as tempdir:
         resource_.set_assets_path(tempdir)
         yield resource_.get_assets_path()  # type: ignore
@@ -16,7 +19,6 @@ def temp_assetspath(initialize_cme: None) -> Generator[Path, None, None]:
 def test_set_assets_path_constant(
     initialize_cme: None, temp_assetspath: Path
 ) -> None:
-    from cme import resource_
     assets_path = resource_.get_assets_path()
     assert isinstance(assets_path, resource_.AssetsPath)
     assert str(assets_path) == str(temp_assetspath)

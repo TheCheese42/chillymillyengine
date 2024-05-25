@@ -16,7 +16,7 @@ ASSETS_PATH: Optional["AssetsPath"] = None
 
 class AssetsPath(type(Path())):  # type: ignore
     """
-    Provides the find_asset method to recursively retrive the given asset.
+    Provides the find_asset method to recursively retrieve the given asset.
 
     Subclass or instantiate this to create a hierarchie of assets folders
     (e.g. `ImagesPath`, `SoundsPath`, ...).
@@ -32,15 +32,17 @@ class AssetsPath(type(Path())):  # type: ignore
     def find_asset(
         self,
         asset: str,
-        preferences: Optional[tuple[str]] = (".png", ".svg"),
+        preferences: Optional[list[str]] = None,
     ) -> Path:
         """
         Returns first occurrence of the provided filename.
 
         `assets` parameter may use glob syntax.
-        `preferences` should be a tuple containing preferred extensions. Defaults
-        to `.png` and `.svg`. If None, the first match will be picked.
+        `preferences` should be a tuple containing preferred extensions.
+        Defaults to `.png` and `.svg`. If None, the first match will be picked.
         """
+        if preferences is None:
+            preferences = [".png", ".svg"]
 
         for item in self.rglob(asset):
             if not preferences or item.suffix in preferences:
@@ -48,7 +50,7 @@ class AssetsPath(type(Path())):  # type: ignore
         else:
             if preferences:
                 # Nothing found matching preferences, trying again without any
-                return self.find_asset(asset, preferences=None)
+                return self.find_asset(asset, preferences=[])
 
             if "." not in asset:
                 # .find_asset("filename") without ext should also be allowed
