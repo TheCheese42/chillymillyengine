@@ -9,7 +9,7 @@ function.
 
 
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 ASSETS_PATH: Optional["AssetsPath"] = None
 
@@ -25,8 +25,8 @@ class AssetsPath(type(Path())):  # type: ignore
     def __new__(cls, *pathsegments: str | Path) -> AssetsPath:
         return super().__new__(cls, *pathsegments)  # type: ignore
 
-    def __init__(self, *args) -> None:
-        # super().__init__(*args)
+    def __init__(self, *args: Any) -> None:
+        super().__init__(*args)
         self.get = self.find_asset
 
     def find_asset(
