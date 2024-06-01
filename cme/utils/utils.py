@@ -118,8 +118,8 @@ def point_in_rect(x: float, y: float, rect: Rect) -> bool:
     :rtype: bool
     """
     return (
-        rect.x <= x <= rect.x + rect.width
-        and rect.y <= y <= rect.y + rect.height
+        rect.left <= x <= rect.left + rect.width
+        and rect.bottom <= y <= rect.bottom + rect.height
     )
 
 
