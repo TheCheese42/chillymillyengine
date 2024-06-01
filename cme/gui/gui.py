@@ -747,7 +747,7 @@ class UIFineColoredSlider(gui.UIWidget):
 
         x = slider_left
         for color in self.colors:
-            shapes.draw_xywh_rectangle_filled(
+            shapes.draw_lbwh_rectangle_filled(
                 x - self.content_rect.x,
                 slider_bottom - self.color_square_size,
                 width=self.color_square_size,

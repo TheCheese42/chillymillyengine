@@ -1,6 +1,6 @@
 import pytest
 
-from cme import utils
+from cme import types, utils
 
 
 @pytest.mark.requires_window
@@ -48,26 +48,26 @@ def test_str2bool() -> None:
 
 
 def test_point_in_rect() -> None:
-    assert utils.point_in_rect(0, 0, (0, 0, 10, 10))
-    assert utils.point_in_rect(5, 5, (0, 0, 10, 10))
-    assert utils.point_in_rect(10, 10, (0, 0, 10, 10))
-    assert not utils.point_in_rect(-1, -1, (0, 0, 10, 10))
-    assert not utils.point_in_rect(11, 11, (0, 0, 10, 10))
-    assert not utils.point_in_rect(5, 15, (2, 4, 12, 9))
+    assert utils.point_in_rect(0, 0, types.XYWH(0, 0, 10, 10))
+    assert utils.point_in_rect(5, 5, types.XYWH(0, 0, 10, 10))
+    assert utils.point_in_rect(10, 10, types.XYWH(0, 0, 10, 10))
+    assert not utils.point_in_rect(-1, -1, types.XYWH(0, 0, 10, 10))
+    assert not utils.point_in_rect(11, 11, types.XYWH(0, 0, 10, 10))
+    assert not utils.point_in_rect(5, 15, types.XYWH(2, 4, 12, 9))
 
-    assert utils.point_in_rect(0.0, 0.0, (0.0, 0.0, 10.0, 10.0))
-    assert utils.point_in_rect(5.5, 5.5, (0.0, 0.0, 10.0, 10.0))
-    assert utils.point_in_rect(10.2, 10.2, (0.5, 0.5, 10.2, 10.2))
-    assert not utils.point_in_rect(-1.0, -1.0, (0.0, 0.0, 10.0, 10.0))
-    assert not utils.point_in_rect(11.5, 11.5, (0.1, 0.1, 10.6, 10.6))
-    assert not utils.point_in_rect(5.6, 15.3, (2.6, 4.7, 12.2, 9.4))
+    assert utils.point_in_rect(0.0, 0.0, types.XYWH(0.0, 0.0, 10.0, 10.0))
+    assert utils.point_in_rect(5.5, 5.5, types.XYWH(0.0, 0.0, 10.0, 10.0))
+    assert utils.point_in_rect(10.2, 10.2, types.XYWH(0.5, 0.5, 10.2, 10.2))
+    assert not utils.point_in_rect(-1.0, -1.0, types.XYWH(0.0, 0.0, 10.0, 10.0))  # noqa
+    assert not utils.point_in_rect(11.5, 11.5, types.XYWH(0.1, 0.1, 10.6, 10.6))  # noqa
+    assert not utils.point_in_rect(5.6, 15.3, types.XYWH(2.6, 4.7, 12.2, 9.4))
 
-    assert utils.point_in_rect(0, 0, (0, 0, 0, 0))
-    assert utils.point_in_rect(0.0, 0.0, (0.0, 0.0, 0.0, 0.0))
-    assert not utils.point_in_rect(-1, 1, (0, 0, 0, 0))
-    assert not utils.point_in_rect(1, 1, (0, 0, 0, 0))
-    assert not utils.point_in_rect(1.0, 1.0, (0.0, 0.0, 0.0, 0.0))
-    assert not utils.point_in_rect(-1.0, 1.0, (0.0, 0.0, 0.0, 0.0))
+    assert utils.point_in_rect(0, 0, types.XYWH(0, 0, 0, 0))
+    assert utils.point_in_rect(0.0, 0.0, types.XYWH(0.0, 0.0, 0.0, 0.0))
+    assert not utils.point_in_rect(-1, 1, types.XYWH(0, 0, 0, 0))
+    assert not utils.point_in_rect(1, 1, types.XYWH(0, 0, 0, 0))
+    assert not utils.point_in_rect(1.0, 1.0, types.XYWH(0.0, 0.0, 0.0, 0.0))
+    assert not utils.point_in_rect(-1.0, 1.0, types.XYWH(0.0, 0.0, 0.0, 0.0))
 
 
 def test_missing_keys() -> None:

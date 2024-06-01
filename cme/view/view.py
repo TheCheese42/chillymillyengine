@@ -82,19 +82,25 @@ class FadingView(View):
 
     def draw_fading(self) -> None:
         if self._fade_out is not None:
-            cme.shapes.draw_rectangle_filled(
-                center_x=self.window.width / 2,
-                center_y=self.window.height / 2,
+            rect = arcade.types.LBWH(
+                left=0,
+                bottom=0,
                 width=self.window.width,
                 height=self.window.height,
+            )
+            cme.shapes.draw_rect_filled(
+                rect,
                 color=(0, 0, 0, int(self._fade_out)),
             )
 
         if self._fade_in is not None:
-            cme.shapes.draw_rectangle_filled(
-                center_x=self.window.width / 2,
-                center_y=self.window.height / 2,
+            rect = arcade.types.LBWH(
+                left=0,
+                bottom=0,
                 width=self.window.width,
                 height=self.window.height,
+            )
+            cme.shapes.draw_rect_filled(
+                rect,
                 color=(0, 0, 0, int(self._fade_in)),
             )

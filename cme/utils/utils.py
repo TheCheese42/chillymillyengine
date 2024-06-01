@@ -112,13 +112,14 @@ def point_in_rect(x: float, y: float, rect: Rect) -> bool:
     :type x: float
     :param y: Y coordinate of the point
     :type y: float
-    :param rect: Rectangle (x, y, width, height)
-    :type rect: Rect | FloatRect
+    :param rect: Rectangle (See arcade.types.Rect)
+    :type rect: Rect
     :return: Wether the point is inside the rectangle
     :rtype: bool
     """
     return (
-        rect[0] <= x <= rect[0] + rect[2] and rect[1] <= y <= rect[1] + rect[3]
+        rect.x <= x <= rect.x + rect.width
+        and rect.y <= y <= rect.y + rect.height
     )
 
 
