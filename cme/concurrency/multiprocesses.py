@@ -19,7 +19,7 @@ def start_worker_process(
     kwargs: Mapping[str, Any] = {},
     daemon: Optional[bool] = None,
     callback: Optional[Callable[[], None]] = None,
-) -> multiprocessing.Queue[Any]:
+) -> multiprocessing.Queue:
     """
     Opens a worker process for heavy, blocking tasks. Enables usage of multiple
     CPUs. If this is not required `start_helper_thread` might be a better pick.
@@ -54,7 +54,7 @@ def setup_worker_process(
     target: Callable[[], Any],
     name: Optional[str] = None,
     daemon: Optional[bool] = None,
-) -> multiprocessing.Queue[Any]:
+) -> multiprocessing.Queue:
     """
     Set up a permanent worker process processing on demand. This can be useful
     to avoid process create overhead. To use, simply store the queue returned

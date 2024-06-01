@@ -7,7 +7,7 @@ import math
 from collections import defaultdict
 from typing import Any, Optional
 
-from arcade.types import FloatRect, Rect
+from arcade.types import Rect
 from pyglet.text import Label
 
 
@@ -104,7 +104,7 @@ def str2bool(string: str, return_false_on_error: bool = False) -> bool:
     return out
 
 
-def point_in_rect(x: float, y: float, rect: Rect | FloatRect) -> bool:
+def point_in_rect(x: float, y: float, rect: Rect) -> bool:
     """
     Find out wether the specified point is inside a rectangle.
 
