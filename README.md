@@ -29,4 +29,4 @@ If the level is left out, it will be `logging.DEBUG` or `logging.WARNING`, depen
 
 ## Testing
 
-Testing has to be done locally as the GitHub remote is running headless. Now with the transition to arcade 3 excluding the `requires_window` mark doesn't work either anymore.
+Despite having an action for testing, GitHub Actions is running headless so some functions (with the `requires_window` mark) won't run there, requiring local testing before every merge as well.

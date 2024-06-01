@@ -1,6 +1,6 @@
 import atexit
 import logging
-import os
+import shutil
 from pathlib import Path
 from tempfile import mkdtemp
 
@@ -25,4 +25,8 @@ def test_logger_functions() -> None:
     logger.error("Error")
     logger.critical("Critical")
 
-    atexit.register(lambda: os.unlink(tempdir))
+    def cleanup_logger() -> None:
+        logging.shutdown()
+        shutil.rmtree(tempdir)
+
+    atexit.register(cleanup_logger)
