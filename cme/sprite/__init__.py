@@ -12,12 +12,14 @@ from arcade import (SpriteList, check_for_collision,
                     check_for_collision_with_list,
                     check_for_collision_with_lists)
 
+from .animator import Animator
 from .sprite import (AnimatedSprite, AnimatedWalkingSprite, SimpleUpdater,
                      Sprite, StrictCollisionUpdater, TopDownUpdater, Updater)
 
 __all__ = [
     "AnimatedSprite",
     "AnimatedWalkingSprite",
+    "Animator",
     "ArcadeSprite",
     "BasicSprite",
     "check_for_collision",
