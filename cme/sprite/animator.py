@@ -1,4 +1,4 @@
-from typing import Any, Iterable, Union
+from typing import Any, Callable, Iterable, Union
 
 from .sprite import Sprite
 
@@ -12,10 +12,12 @@ class Animator:
         self,
         obj: Union[Sprite, Any],
         seconds: float,
+        callback: Callable[[], None] = lambda: None,
         **kwargs: float,
     ) -> None:
         self._obj = obj
         self._seconds = self._remaining_seconds = seconds
+        self.callback = callback
         self._dest_attrs = kwargs
         self._original_attrs = self._cur_attrs(obj, kwargs)
 
@@ -24,6 +26,11 @@ class Animator:
         return {k: getattr(obj, k) for k in attrs}
 
     def update(self, delta_time: float) -> None:
+        if self._remaining_seconds <= delta_time:
+            for k, v in self._dest_attrs.items():
+                setattr(self._obj, k, v)
+            self.callback()
+            return
         self._remaining_seconds -= delta_time
         seconds_done = self._seconds - self._remaining_seconds
         percent_done = seconds_done / self._seconds

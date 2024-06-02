@@ -32,6 +32,30 @@ class SimpleUpdater(Updater):
         sprite.angle += sprite.change_angle * delta_time
 
 
+class WallBounceUpdater(SimpleUpdater):
+    """Just move, taking delta_time into account. Bounce from walls."""
+
+    def __init__(self, border: Rect) -> None:
+        self.border = border
+
+    def update(self, sprite: arcade.Sprite, delta_time: float) -> None:
+        super().update(sprite, delta_time)
+        if sprite.left < self.border.left:
+            sprite.left = self.border.left
+            sprite.change_x = -sprite.change_x
+        elif sprite.right > self.border.right:
+            sprite.right = self.border.right
+            sprite.change_x = -sprite.change_x
+        elif sprite.bottom < self.border.bottom:
+            sprite.bottom = self.border.bottom
+            sprite.change_y = -sprite.change_y
+        elif sprite.top > self.border.top:
+            sprite.top = self.border.top
+            sprite.change_y = -sprite.change_y
+        else:
+            return
+
+
 class StrictCollisionUpdater(Updater):
     """
     Move taking delta_time into account, cancelling movement into a specific

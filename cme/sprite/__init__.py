@@ -14,7 +14,8 @@ from arcade import (SpriteList, check_for_collision,
 
 from .animator import Animator
 from .sprite import (AnimatedSprite, AnimatedWalkingSprite, SimpleUpdater,
-                     Sprite, StrictCollisionUpdater, TopDownUpdater, Updater)
+                     Sprite, StrictCollisionUpdater, TopDownUpdater, Updater,
+                     WallBounceUpdater)
 
 __all__ = [
     "AnimatedSprite",
@@ -35,4 +36,5 @@ __all__ = [
     "StrictCollisionUpdater",
     "TopDownUpdater",
     "Updater",
+    "WallBounceUpdater",
 ]
