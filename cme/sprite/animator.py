@@ -12,7 +12,7 @@ class Animator:
         self,
         obj: Union[Sprite, Any],
         seconds: float,
-        callback: Callable[[], None] = lambda: None,
+        callback: Callable[["Animator"], None] = lambda: None,
         **kwargs: float,
     ) -> None:
         self._obj = obj
@@ -29,7 +29,7 @@ class Animator:
         if self._remaining_seconds <= delta_time:
             for k, v in self._dest_attrs.items():
                 setattr(self._obj, k, v)
-            self.callback()
+            self.callback(self)
             return
         self._remaining_seconds -= delta_time
         seconds_done = self._seconds - self._remaining_seconds
