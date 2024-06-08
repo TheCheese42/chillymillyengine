@@ -9,7 +9,7 @@ function.
 
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 ASSETS_PATH: Optional["AssetsPath"] = None
 

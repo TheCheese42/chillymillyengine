@@ -220,6 +220,7 @@ class AnimatedSprite(Sprite):
         ] = {}
 
         self._state: Optional[str] = None
+        self._last_state: Optional[str] = None
 
         self._facing: Facing | int = Facing.RIGHT
 
@@ -234,6 +235,7 @@ class AnimatedSprite(Sprite):
     def state(self, value: str) -> None:
         if value not in self.all_textures:
             raise ValueError(f"No textures found for state `{value}`")
+        self._last_state = self._state
         self._state = value
         self.cur_texture_index = 0
 
@@ -267,7 +269,12 @@ class AnimatedSprite(Sprite):
             )
 
         current_time = time.time()
-        if current_time - self._last_animation_update >= self.animation_speed:
+        if (
+            self.state != self._last_state or
+            current_time - self._last_animation_update >= self.animation_speed
+        ):
+            self._last_state = self.state  # Immediately switch if new state
+
             self.cur_texture_index += 1
             self._last_animation_update = current_time
 

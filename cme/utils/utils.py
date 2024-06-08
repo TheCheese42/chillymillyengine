@@ -244,6 +244,24 @@ def calc_angle(p1: tuple[float, float], p2: tuple[float, float]) -> float:
     return angle_degrees
 
 
+def jump_vertical_position(yo: float, vo: float, t: float, a: float) -> float:
+    """
+    Calculate the jump vertical position from jump time.
+
+    :param yo: Initial vertical position
+    :type yo: float
+    :param vo: Initial vertical acceleration
+    :type vo: float
+    :param t: Time in jump
+    :type t: float
+    :param a: Gravity constant
+    :type a: float
+    :return: Vertical position
+    :rtype: float
+    """
+    return yo + vo * t + 1 / 2 * a * t ** 2
+
+
 class NullStream:
     def write(self, *args: Any, **kwargs: Any) -> None:
         pass
