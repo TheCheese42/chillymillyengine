@@ -1,6 +1,6 @@
 # Chilly Milly Engine
 
-[![Static Analysis and Tests](https://github.com/NotYou404/chillymillyengine/actions/workflows/lint_format_test.yml/badge.svg)](https://github.com/NotYou404/chillymillyengine/actions/workflows/lint_format_test.yml)
+[![Static Analysis and Tests](https://github.com/TheCheese42/chillymillyengine/actions/workflows/lint_format_test.yml/badge.svg)](https://github.com/TheCheese42/chillymillyengine/actions/workflows/lint_format_test.yml)
 
 Game Engine for Chilly Milly Games.
 
