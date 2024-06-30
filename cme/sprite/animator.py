@@ -12,7 +12,7 @@ class Animator:
         self,
         obj: Union[Sprite, Any],
         seconds: float,
-        callback: Callable[["Animator"], None] = lambda: None,
+        callback: Callable[["Animator"], None] = lambda _: None,
         **kwargs: float,
     ) -> None:
         self._obj = obj
