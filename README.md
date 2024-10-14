@@ -4,6 +4,10 @@
 
 Game Engine for Chilly Milly Games.
 
+## Warning
+
+This library build on top of an older pre-release of the python arcade library. For use with a more recent version, or even the full v3 release, cme must be updated first.
+
 ## First steps
 
 First thing to do is to call the `init_cme` function:
@@ -11,8 +15,10 @@ First thing to do is to call the `init_cme` function:
 ```python
 from cme import init_cme
 
-init_cme(app_name="Foo")
+init_cme(app_name="My Game")
 ```
+
+The name will later be used to figure the optimal config and data directories.
 
 ### Configure logger
 
@@ -25,7 +31,7 @@ import logging
 configure_logger(level=logging.INFO, debug=True)
 ```
 
-If the level is left out, it will be `logging.DEBUG` or `logging.WARNING`, depending on if the `__debug__` constant is True or not. Similarly the debug parameter defaults to said constant.
+If the level is left out, it will be `logging.DEBUG` or `logging.WARNING`, depending on the `__debug__` constant. Similarly the debug parameter defaults to said constant.
 
 ## Testing
 
